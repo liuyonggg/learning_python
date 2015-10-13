@@ -13,7 +13,7 @@ def test1():
     s = "hello"
     i = 0
     for a in s:
-         assert (a == getAt(s, i))
+        assert (a == getAt(s, i))
         i = i + 1
 
 def test2():
@@ -22,7 +22,7 @@ def test2():
     assert (0 == find(s, 'h'))
     assert (1 == find(s, 'e'))
     assert (2 == find(s, 'l'))
-    assert (s[getAt(find(s, 'o'))] == 'o')
+    assert (getAt(s, find(s, 'o')) == 'o')
 
 def test3():
     print ("test3:")
