@@ -1,19 +1,31 @@
 'this is exercise 1'
 
 def getAt(str, i):
-    pass
+    '''
+    get the ith element in str
+    for example: getAt("hello", 0) will return the 0th element 'h' in the "hello"
+    :type str: string
+    :type i: int
+    :rtype char
+    '''
+    return str[i]
 
 
 def find(str, c):
-    pass
+    return str.find(c)
 
 def getLen(str):
-    pass
+    return len(str)
 
 "for test purpose, student shouldn't change it"
 def test1():
     print ("test1: ")
     s = "hello"
+    assert ('h' == getAt(s, 0))
+    assert ('e' == getAt(s, 1))
+    assert ('l' == getAt(s, 2))
+    assert ('l' == getAt(s, 3))
+    assert ('o' == getAt(s, 4))
     i = 0
     for a in s:
         assert (a == getAt(s, i))
