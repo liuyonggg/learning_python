@@ -1,0 +1,254 @@
+>>> def f(x):
+...     return x + 1
+... 
+>>> f(0)
+1
+>>> f(1)
+2
+>>> f(5)
+6
+>>> f(99)
+100
+>>> f(199)
+200
+>>> def f(x):
+KeyboardInterrupt
+>>> def f2(x, y):
+...     return x + y
+... 
+>>> f2(4, 5)
+9
+>>> def conner_sum(x):
+... 
+KeyboardInterrupt
+>>> [0, 1, 2, 3]
+[0, 1, 2, 3]
+>>> l = [0, 1, 2, 3]
+>>> l 
+[0, 1, 2, 3]
+>>> l[0]
+0
+>>> l[-1]
+3
+>>> l[-2]
+2
+>>> l[-3]
+1
+>>> l[-4]
+0
+>>> l[3]
+3
+>>> l[1:1]
+[]
+>>> l[1:2]
+[1]
+>>> l[1:3]
+[1, 2]
+>>> l = [100, 101, 102, 103]
+>>> l[::1]
+[100, 101, 102, 103]
+>>> l[0:5:1]
+[100, 101, 102, 103]
+>>> l[0:5:2]
+[100, 102]
+>>> l[0:4:1]
+[100, 101, 102, 103]
+>>> l[::2]
+[100, 102]
+>>> def conner_sum(x):
+...     res = 0
+...     for i in x:
+KeyboardInterrupt
+>>> for i in l:
+...     print i
+... 
+100
+101
+102
+103
+>>> for i in l:
+...     print i+1
+... 
+101
+102
+103
+104
+>>> for i in l:
+...     if i < 102:
+...             print i
+... 
+100
+101
+>>> print i for i in l
+  File "<stdin>", line 1
+    print i for i in l
+              ^
+SyntaxError: invalid syntax
+>>> i for i in l
+  File "<stdin>", line 1
+    i for i in l
+        ^
+SyntaxError: invalid syntax
+>>> [i for i in l]
+[100, 101, 102, 103]
+>>> res = 0
+>>> for i in l:
+...     res = res + i
+... 
+>>> res2 = 0
+>>> res2 = res2 + l[0]
+>>> res2
+100
+>>> res2 = res2 + l[1]
+>>> res2
+201
+>>> res2 = res2 + l[2]
+>>> res2
+303
+>>> res2 = res2 + l[3]
+>>> res2
+406
+>>> res
+406
+>>> l1 = [200, 201, 202, 203]
+>>> l1
+[200, 201, 202, 203]
+>>> for i in l1:
+...     res3 = res3 + i
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+NameError: name 'res3' is not defined
+>>> res3 = 0
+>>> for i in l1:
+...     res3 = res3 + i
+... 
+>>> res3
+806
+>>> def conner_sum(x):
+...     for i in x:
+...             res = res + i
+...     return res
+... 
+>>> conner_sum(l)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<stdin>", line 3, in conner_sum
+UnboundLocalError: local variable 'res' referenced before assignment
+>>> def conner_sum(x):
+...     res = 0
+...     for i in x:
+...             res = res + i
+...     return res
+... 
+>>> conner_sum(l)
+406
+>>> conner_sum(l1)
+806
+>>>             res = res + i
+KeyboardInterrupt
+>>> def conner_sum2(a):
+...     res = 0
+...     for i in a:
+...             res = res + i
+...     return res
+... 
+>>> conner_sum2(l)
+406
+>>> s = "hello"
+>>> s[0]
+'h'
+>>> s[1]
+'e'
+>>> s[3]
+'l'
+>>> s[-1]
+'o'
+>>> s[::2]
+'hlo'
+>>> s[:2]
+'he'
+>>> s.find("e")
+1
+>>> s.find("h")
+0
+>>> s.find("l")
+2
+>>> s.find("lo")
+3
+>>> s.find("el")
+1
+>>> s = "helolo"
+>>> s.find("lo")
+2
+>>> s.rfind("lo")
+4
+>>> s.rfind("lo")
+4
+>>> s.count("l")
+2
+>>> s.count("h")
+1
+>>> s.count("e")
+1
+>>> s.count("o")
+2
+>>> len(l1)
+4
+>>> l1
+[200, 201, 202, 203]
+>>> len(s)
+6
+>>> l[0]
+100
+>>> l[1]
+101
+>>> i=3
+>>> l[i]
+103
+>>> def getAt(l, i):
+...     return l[i]
+... 
+>>> l[0]
+100
+>>> getAt(l, 0)
+100
+>>> getAt(l, 3)
+103
+>>> getAt(l1, 3)
+203
+>>> getAt(s, 3)
+'o'
+>>> def my_assert (x):
+...     if x == True:
+...             print "OK"
+...     else:
+...             print "fail"
+... 
+>>> my_assert(3)
+fail
+>>> def my_assert (x):
+...     if x:
+...             print "OK"
+...     else:
+...             print "FAIL"
+... 
+>>> my_assert(3)
+OK
+>>> 0, False, [], None
+KeyboardInterrupt
+>>> my_assert(0)
+FAIL
+>>> my_assert(False)
+FAIL
+>>> my_assert(None)
+FAIL
+>>> my_assert([])
+FAIL
+>>> assert (3)
+>>> assert (0)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AssertionError
+>>> 
+
