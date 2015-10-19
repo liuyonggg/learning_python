@@ -1,3 +1,5 @@
+'this is exercise 1'
+
 def getAt(str, i):
     pass
 
@@ -8,6 +10,7 @@ def find(str, c):
 def getLen(str):
     pass
 
+"for test purpose, student shouldn't change it"
 def test1():
     print ("test1: ")
     s = "hello"
