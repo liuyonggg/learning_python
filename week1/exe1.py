@@ -1,3 +1,5 @@
+'this is exercise 1'
+
 def getAt(str, i):
     '''
     get the ith element in str
@@ -15,6 +17,7 @@ def find(str, c):
 def getLen(str):
     return len(str)
 
+"for test purpose, student shouldn't change it"
 def test1():
     print ("test1: ")
     s = "hello"
