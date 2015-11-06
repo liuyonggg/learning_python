@@ -8,21 +8,16 @@ For example, given [1,2,3,4], return [24,12,8,6].
 Follow up:
 Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
 '''
-
-class Solution():
-    def productExceptSelf(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: List[int]
-        """
-        res = []
+class Solution:
+    def productExceptSelf(self,nums):
+        num = []
         for i in xrange(len(nums)):
-            v = 1
+            x = 1
             for j in xrange(len(nums)):
-                v = v*nums[j] if i != j else v
-            res.append(v)
-        return res
+                x = x * nums[j] if j != i else x
+            num.append(x)
+        return num
+
+
 
 assert Solution().productExceptSelf([1,2,3,4]) == [24,12,8,6]
-            
-        

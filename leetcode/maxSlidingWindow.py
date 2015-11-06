@@ -22,9 +22,11 @@ Could you solve it in linear time?
 '''
 
 class Solution:
-    def maxSlidingwindow(self,nums,k):
+    def maxSlidingWindow(self,nums,k):
         num = []
         for i in xrange(len(nums) - k + 1):
-            num.append(max(nums[i:i + k]))
+            num.append(max(nums[i:i+k]))
         return num
-assert Solution().maxSlidingwindow([1,3,-1,-3,5,3,6,7],3) == [3,3,5,5,6,7]
+
+
+assert Solution().maxSlidingWindow([1,3,-1,-3,5,3,6,7],3) == [3,3,5,5,6,7]
