@@ -49,28 +49,47 @@ class Solution:
         i = lo
         j = hi
         pv = nums[lo]
-        while True:
+        while i < j:
             while nums[i] < pv:
                 i = i + 1
             while nums[j] > pv:
                 j = j - 1
-            if i < j:
-                t = nums[i]
-                nums[i] = nums[j]
-                nums[j] = t
-            else:
-                return j
-        
+            t = nums[i]
+            nums[i] = nums[j]
+            nums[j] = t
+        return j
+       
     def quickSort2Core(self, nums, lo, hi):
         if lo < hi:
             pi = self.partition(nums, lo, hi)
             self.quickSort2Core(nums, lo, pi-1)
             self.quickSort2Core(nums, pi+1, hi)
-                   
+                  
     def quickSort2(self, nums):
         self.quickSort2Core(nums, 0, len(nums)-1)
         return nums
-        
+
+    def merge(self, nums1, nums2):
+        res = []
+        i = 0
+        j = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] <= nums2[j]:
+                res.append(nums1[i])
+                i = i + 1
+            else:
+                res.append(nums2[j])
+                j = j + 1
+        res = res + nums1[i:] if i < len(nums1) else res + nums2[j:]
+        return res
+
+    def mergeSort(self, nums):
+        if len(nums) == 1:
+            return nums
+        mp = (len(nums)- 1)/2
+        l = self.mergeSort(nums[:mp+1])
+        r = self.mergeSort(nums[mp+1:])
+        return self.merge(l, r)
 
 def test_1(v, refv):
     assert (Solution().sort(v) == refv)
@@ -86,6 +105,15 @@ def test_quicksort(v, refv):
 def test_quicksort2(v,refv):
     assert (Solution().quickSort2(v) == refv)
 
+def test_merge():
+    assert Solution().merge([1, 5, 6], [2, 3, 4]) == [1, 2, 3 ,4, 5, 6]
+    assert Solution().merge([1], [2, 3, 4]) == [1, 2, 3 ,4]
+    assert Solution().merge([1, 2, 3], [4]) == [1, 2, 3 ,4]
+    
+
+def test_mergesort(v,refv):
+    assert (Solution().mergeSort(v) == refv)
+
 if __name__ == "__main__":
     random.seed(0)
     refm = range(10000)
@@ -99,4 +127,6 @@ if __name__ == "__main__":
     #print timeit.timeit(stmt='test_2(m, refm)', setup="from __main__ import test_2, m, refm", number=1)
     print timeit.timeit(stmt='test_quicksort(m, refm)', setup="from __main__ import test_quicksort, m, refm", number=1)
     print timeit.timeit(stmt='test_quicksort2(m, refm)', setup="from __main__ import test_quicksort2, m, refm", number=1)
+    test_merge()
+    print timeit.timeit(stmt='test_mergesort(m, refm)', setup="from __main__ import test_mergesort, m, refm", number=1)
 
