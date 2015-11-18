@@ -1,7 +1,7 @@
 
 import unittest
 
-from Model import *
+from Model.Model import *
 
 class TestModel(unittest.TestCase):
     def test_model(self):
