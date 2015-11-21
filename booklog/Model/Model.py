@@ -331,3 +331,115 @@ class BookModel(Model):
         """
         return self.__str__
 
+
+
+class BookManagerModel(Model):
+    """
+    Model for BookManager
+    """
+    def __init__(self):
+        """init the BookManagerModel
+        """
+        self.books = []
+        self.new_ID = len(self.books)
+
+    def add_book(self, book):
+        """ add the book to manager
+        Returns:
+            None
+        """
+        self.book.append(book)
+        book.ID = self.new_ID
+        self.new_ID = len(self.books)
+    
+    def search_book_by_ID(self, ID):
+        """ search book by ID
+        Returns:
+            book or None
+        """
+        for b in self.books:
+            if b.ID == ID:
+                return b
+        return None
+
+    def search_book_by_name(self, name):
+        pass
+
+    def search_book_by_author(self, author):
+        pass
+
+    def search_book_by_DoP(self, DoP):
+        pass
+
+    def search_book_by_DoR(self, DoR):
+        pass
+
+    def search_book_by_RoS(self, RoS):
+        pass
+
+    def sort_book_by_ID(self):
+        pass
+
+    def sort_book_by_name(self):
+        """ sort books by name
+        Returns:
+            None
+        """
+        self.books = merge_sort(self.books, BookModel.compare_by_name)
+
+    def serialize(self):
+        """serialize the BookManager
+        Returns:
+            string : serialized result
+        """
+        res = ""
+        for b in self.books:
+            res = res + b.serialize()
+        return res
+
+    def deserialize(self, s):
+        """deserialize the object
+        Returns:
+            None
+        """
+        for i in xrange(0, len(self.books), 6):
+            b = BookModel()
+            b.deserialize(s[i:i+6])
+            self.books.append(b)
+        
+
+def merge_core(items1, items2, compare_func):
+    """merge two sorted items
+       items1: list
+       items2: list
+       compare_func: compare function
+    Returns:
+       list: merged items1 and items2 in ascendent order
+    """
+    l1 = len(items1)
+    l2 = len(items2)
+    lm = l2 if l1 >= l2 else l1
+    res = []
+    i = 0
+    j = 0
+    while i < lm and j < lm: 
+        if compare_func(items1[i], items2[j]) <= 0:
+            res.append(items1[i])
+            i = i + 1
+        else:
+            assert (compare_func(items1[i], items2[j]) > 0)
+            res.append(items2[j])
+            j = j + 1
+    while i < len(items1):
+        res.append(items1[i])
+        i = i + 1
+    while j < len(items2):
+        res.append(items2[j])
+        j = j + 1
+    return res
+    
+def merge_sort_core(items, compare_func):        
+
+def merge_sort(items, compare_func):        
+    
+    

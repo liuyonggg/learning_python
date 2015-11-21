@@ -14,13 +14,11 @@ int main()
     {
         res = mergeSort(a, 100);
     }
-    /*
     for (i = 0; i < 100; ++i)
     {
         printf("%d ", res[i]);
     }
     printf("\n");
-    */
 }
 
 int mergeSort(int* nums, int len)

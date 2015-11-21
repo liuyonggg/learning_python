@@ -31,6 +31,7 @@ find  : find an item by Name
 m     : return to main view
 p     : previous page, 20 items in a page
 n     : next page, 20 items in a page
+exit  : exit program
 ========================================================================================
 
 1.2 add view
@@ -114,4 +115,113 @@ Author: Author Name, 15 bytes
 DoP: Date of Publish, 10 bytes
 DoR: Date of Read, 10 bytes
 RoS: Review of Score, 0-5, 3 bytes
+
+2 Architecture
+
+MVC(Model + View + Controller)  will be used in the architecture
+
+                -----------------       ---------------
+   User ---->   |               |       |             |
+        <----   |    Controller | <---- |    Model    |
+                |               |       |             |
+                |----------------       ---------------
+                        ^
+                        |
+                -----------------
+                |               |
+                |   View        |
+                |               |
+                -----------------
+
+
+2.1 Model
+    2.1.1 Class Model
+    Methold: de/serialize
+
+    2.1.2 Class BookModel
+    Property: integer ID, String Name, String Author, Time DoP, Time DoR, Integer RoS
+    Method:   Init, equal ID, equal Name, compare by ID(by default), Name, Author, DoP, DoR or RoS
+              get_ID, Name, Author, DoP, DoR, RoS
+              set Name, Author, DoP, DoR, RoS
+              de/serialize
+
+    2.1.3 Class BookManagerModel
+    Property: list of Books, new_ID
+    Method:   add_book, 
+              #change_book for Name, Author, DoP, DoR, RoS
+              search_book for ID, Name, Author, DoP, DoR, RoS
+              sort_book for ID, Name, Author, DoP, DoR, RoS
+              iterate_book
+              de/serialize 
+
+2.2 View
+    2.2.1 Class View          
+          Property: format
+          Method: display
+
+    2.2.2 Class MainView
+          Property: format, BookManagerModel
+          Method: display
+
+    2.2.3 Class AddView
+          Property: format, Book
+          Method: display
+
+    2.2.4 Class EditView
+          Property: format, Book
+          Method: display
+
+    2.2.4 Class SearchView
+          Property: format, Book
+          Method: display
+
+    2.2.5 Class DetailView
+          Property: format, Book
+          Method: display
+
+2.3 Controller
+    2.3.1 Class Controller
+          Property: Model, list of View
+          Method: command dispatch,   
+                  sort command handler, add handler, edit handler, view handler, find handler,
+                  show handler, previous page handler, next pange handler, exit handler
+
+3 Test Plan
+    Model test, BookModel test, BookManagerModel test
+    View test, MainView test, AddView test, EditView test, SearchView test, DetailView test
+    Controller test
+
+4 Develop Plan
+    3 hours: prototype
+    3 hours: Model test, BookModel test, BookManagerModel test
+    2 hours: View test, MainView test, AddView test, EditView test, SearchView test, DetailView test
+    2 hours: Controller test
+
+5 copyright
+Copyright (c) <2015> Zechen Liu
+
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+    
 
