@@ -1,7 +1,7 @@
 '''
 Copyright (c) <2015> Zechen Liu
-    
-    
+
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,165 +24,135 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-'''
 
+
+
+'''
 import datetime
 
 class Model(object):
     """
-    Model for all data
+    class for model
     """
-    def __init__(self):
-        """ inits the class"""
-        pass
+    pass
 
-    def serialize(self):
-        """ serialize the object
-        Returns:
-            string
-        """
-        pass
-
-    def deserialize(self, s):
-        """ deserialize the object
-        Returns:
-            object
-        """
-        return self
 
 class BookModel(Model):
-    """
-    Model for Book
+    """Model for Book
     """
     def __init__(self):
-        """ Inits the model"""
-        self._ID = None
-        self._name = None
-        self._author = None
-        self._DoP = None # Date of Publish
-        self._DoR = None # Date of Read
-        self._RoS = None # Review of Score
-    
-    def _compare_by_number(self, n1, n2):
-        """compare two numbers
-        Returns:
-            -1 n1 < n2
-            0  n1 == n2 
-            1  n1 > n2 
+        """init BookModel
         """
-        res = 0
-        if n1 > n2:
-            res = 1
-        elif n1 < n2:
-            res = -1
-        else:
-            assert (n1 == n2)
-            res = 0
-        return res
+        self.ID = 1
+        self.name = "a"
+        self.author = "a"
+        self.DoP = "3-2-3"
+        self.DoR = "2-3-2"
+        self.RoS = 0
 
-    def _compare_by_str(self, s1, s2):
-        """ compare two str
-        Returns:
-            -1 s1 < s2
-            0  s1 == s2
-            1  s1 > s2
+    def __repr__(self):
+        """represent a book
         """
-        l = len(s1) if len(s1) <= len(s2) else len(s2)
-        res = 0
-        for i in xrange(l):
-            if s1[i] > s2[i]:
-                res = 1
-                break
-            elif s1[i] < s2[i]:
-                res = -1
-                break
-        if res == 0: 
-            if len(s1) > len(s2):
-                res = 1
-            elif len(s1) < len(s2):
-                res = -1
-            else:
-                assert len(s1) == len(s2)
-                assert (res == 0)
-        return res
-
-    def _compare_by_date(self, d1, d2):
-        """compare two numbers
-        Returns:
-            -1 d1 < d2
-            0  d1 == d2 
-            1  d1 > d2 
-        """
-        res = 0
-        if d1 > d2:
-            res = 1
-        elif d1 < d2:
-            res = -1
-        else:
-            assert (d1 == d2)
-            res = 0
-        return res
-
+        return "%d\n%s\n%s\n%s\n%s\n%d" % (self.ID, self.name, self.author, self.DoP, self.DoR, self.RoS)
         
+    def compare_by_number(self, n1, n2):
+        """compares two numbers
+        Return:
+            0 if number1 is equals to number2
+            1 if number1 is bigger than number2
+            -1 if number1 is smaller than number2
+        """
+        if n1 > n2:
+            return 1
+        elif n2 > n1:
+            return -1
+        else:
+            assert(n1 == n2)
+            return 0
+    
+    def compare_by_string(self, s1, s2):
+        """Compare two string
+        Returns:
+            1 if string1 > string2
+            0 if string2 == string2
+            -1 if string1 > string2
+        """
+        if len(s1) < len(s2):
+            for i in xrange(len(s1)):
+                if s1[i] > s2[i]:
+                    return 1
+                if s1[i] < s2[i]:
+                    return -1
+            return 0
+        else:
+            assert(len(s1) >= len(s2))
+            for i in xrange(len(s2)):
+                if s1[i] > s2[i]:
+                    return 1
+                if s1[i] < s2[i]:
+                    return -1
+            return 0
+
 
     def compare_by_ID(self, other):
-        """ compare the object with other object by ID
+        """Compare two ID
         Returns:
-            -1 self._ID < other._ID
-            0  self._ID == other._ID
-            1  self._ID > other._ID
+            1 if self._ID > other._ID
+            0 if self._ID == other._ID
+            -1 if self._ID > other._ID
         """
-        return self._compare_by_number(self._ID, other._ID)
-        
-
+        return self.compare_by_number(self._ID, other._ID)
 
     def compare_by_name(self, other):
-        """ compare the object with other object by name
+        """Compare two name
         Returns:
-            -1 self._name < other._name
-            0  self._name == other._name
-            1  self._name > other._name
+            1 if self._name > other._name
+            0 if self._name == other._name
+            -1 if self._name > other._name
         """
-        return self._compare_by_str(self._name, other._name)
-        
+        return self.compare_by_string(self._name, other._name)
 
     def compare_by_author(self, other):
-        """ compare the object with other object by author
+        """Compare two author
         Returns:
-            -1 self._author < other._author
-            0  self._author == other._author
-            1  self._author > other._author
+            1 if self._author > other._author
+            0 if self._author == other._author
+            -1 if self._author > other._author
         """
-        return self._compare_by_str(self._author, other._author)
+        return self.compare_by_string(self._author, other._author)
 
     def compare_by_DoP(self, other):
-        """ compare the object with other object by DoP
+        """Compare two DoP
         Returns:
-            -1 self._DoP < other._DoP
-            0  self._DoP == other._DoP
-            1  self._DoP > other._DoP
-        """
-        return self._compare_by_date(self._DoP, other._DoP)
-
+            1 if self._DoP > other._DoP
+            0 if self._DoP == other._DoP
+            -1 if self._DoP > other._DoP
+        """         
+        return self.compare_by_number(self._DoP, other._DoP)
 
     def compare_by_DoR(self, other):
-        """ compare the object with other object by DoR
+        """Compare two DoR
         Returns:
-            -1 self._DoR < other._DoR
-            0  self._DoR == other._DoR
-            1  self._DoR > other._DoR
-        """
-        return self._compare_by_date(self._DoR, other._DoR)
-
+            1 if self._DoR > other._DoR
+            0 if self._DoR == other._DoR
+            -1 if self._DoR > other._DoR
+        """         
+        return self.compare_by_number(self._DoR, other._DoR)
 
     def compare_by_RoS(self, other):
-        """ compare the object with other object by RoS
+        """Compare two RoS
         Returns:
-            -1 self._RoS < other._RoS
-            0  self._RoS == other._RoS
-            1  self._RoS > other._RoS
-        """
-        return self._compare_by_number(self._RoS, other._RoS)
+            -1 if self._RoS > other._RoS
+            0 if self._RoS == other._RoS
+            1 if self._RoS > other._RoS
+        """         
+        if self._RoS > other._RoS:
+            return -1
+        elif other._RoS > self._RoS:
+            return 1
+        else:
+            assert(self._RoS == other._RoS)
+            return 0
 
     def get_ID(self):
         """get the ID
@@ -191,15 +161,12 @@ class BookModel(Model):
         """
         return self._ID
 
-    def set_ID(self, ID):
-        """set the ID
+    def get_author(self):
+        """get the author
         Returns:
-            None
+            author
         """
-        assert (ID >= 0)
-        self._ID = ID
-
-    ID = property(get_ID, set_ID, None, "ID")
+        return self._author
 
     def get_name(self):
         """get the name
@@ -208,45 +175,12 @@ class BookModel(Model):
         """
         return self._name
 
-    def set_name(self, name):
-        """set the name
-        Returns:
-            None
-        """
-        assert (name)
-        self._name = name
-        
-        
-    def get_author(self):
-        """get the author
-        Returns:
-            author
-        """
-        return self._author
-
-    def set_author(self, author):
-        """set the author
-        Returns:
-            None
-        """
-        assert (author)
-        self._author = author
-
-
     def get_DoP(self):
         """get the DoP
         Returns:
             DoP
         """
         return self._DoP
-
-    def set_DoP(self, DoP):
-        """set the DoP
-        Returns:
-            None
-        """
-        self._DoP = DoP
-
 
     def get_DoR(self):
         """get the DoR
@@ -255,14 +189,6 @@ class BookModel(Model):
         """
         return self._DoR
 
-    def set_DoR(self, DoR):
-        """set the DoR
-        Returns:
-            None
-        """
-        self._DoR = DoR
-
-
     def get_RoS(self):
         """get the RoS
         Returns:
@@ -270,127 +196,250 @@ class BookModel(Model):
         """
         return self._RoS
 
+    def set_ID(self, ID):
+        """set the ID
+        """
+        assert(ID >= 0)
+        self._ID = ID
+    ID = property(get_ID, set_ID, None, "This is ID's property")
+
+    def set_name(self, name):
+        """set the name
+        """
+        assert(name)
+        self._name = name
+    name = property(get_name, set_name, None, "This is name's property")
+
+    def set_author(self, author):
+        """set the author
+        """
+        assert(author)
+        self._author = author
+    author = property(get_author, set_author, None, "This is author's property")
+
+    def set_DoP(self, DoP):
+        """set the DoP
+        """
+        assert(DoP)
+        self._DoP = DoP
+    DoP = property(get_DoP, set_DoP, None, "This is DoP's property")
+
+    def set_DoR(self, DoR):
+        """set the DoR
+        """
+        assert(DoR)
+        self._DoR = DoR
+    DoR = property(get_DoR, set_DoR, None, "This is DoR's property")
+
     def set_RoS(self, RoS):
         """set the RoS
-        Returns:
-            None
         """
-        assert (RoS >= 0)
+        assert(RoS >= 0)
         self._RoS = RoS
-
-    name = property(get_name, set_name, None, "name")
-    author = property(get_author, set_author, None, "author")
-    DoP = property(get_DoP, set_DoP, None, "DoP")
-    DoR = property(get_DoR, set_DoR, None, "DoR")
-    RoS = property(get_RoS, set_RoS, None, "RoS")
+    RoS = property(get_RoS, set_RoS, None, "This is RoS's property")
 
     def serialize(self):
-        """serialize the object
-        Returns:
-            string : serialized result
+        """serialize the book
+        Return:
+            a string containing the book
         """
-        res = "%d\n%s\n%s\n%s\n%s\n%d\n" % (self._ID, self._name, self._author, self._DoP, self._DoR, self._RoS)
-        return res
+        return "%d\n%s\n%s\n%s\n%s\n%d\n" % (self._ID, self._name, self._author, self._DoP, self._DoR, self._RoS)
 
     def deserialize(self, s):
-        """deserialize the object
-        Returns:
-            None
+        """deserialize s
+        Return:
+            a book
         """
-        a = s.split('\n')
-        assert (len(a) == 6 + 1)
-        self._ID = int(a[0])
-        self._name = a[1]
-        self._author = a[2]
-        self._DoP = datetime.datetime.strptime(a[3], "%Y-%m-%d").date()
-        self._DoR = datetime.datetime.strptime(a[4], "%Y-%m-%d").date()
-        self._RoS = int(a[5])
-        assert (not a[6])
-
-    def __eq__(self, other):
-        """test if self is equal to other
-        Returns:
-            True : equal
-            False : not equal
-        """
-        return self._ID == other._ID and self._name == other._name and \
-                self._author == other._author and self._DoP == other._DoP and  \
-                self._DoR == other._DoR and self._RoS == other._RoS
-    
-    def __str__(self):
-        """ convert it to string
-        Returns:
-            str
-        """
-        return "%d: %s" % (self.ID, self.name)
-
-    def __repr__(self):
-        """ return represent str
-        Returns:
-            str
-        """
-        return self.__str__
-
-
+        s = s.split("\n")
+        assert(len(s) == 7)
+        self.ID = int(s[0])
+        assert(self.ID >= 0)
+        self.name = s[1]
+        assert(self.name)
+        self.author = s[2]
+        assert(self.author)
+        self.DoP = s[3]
+        assert(self.DoP)
+        self.DoR = s[4]
+        assert(self.DoR)
+        self.RoS = int(s[5])
+        assert(self.RoS >= 0)
+        #assert(not s[6])
 
 class BookManagerModel(Model):
-    """
-    Model for BookManager
+    """Manager for book
     """
     def __init__(self):
-        """init the BookManagerModel
+        """init BookManagerModel 
         """
         self.books = []
         self.new_ID = len(self.books)
-
-    def add_book(self, book):
-        """ add the book to manager
-        Returns:
-            None
-        """
-        self.book.append(book)
-        book.ID = self.new_ID
-        self.new_ID = len(self.books)
     
-    def search_book_by_ID(self, ID):
-        """ search book by ID
-        Returns:
-            book or None
+    def add_book(self, book):
+        """add a book
         """
-        for b in self.books:
+        book.ID = self.new_ID
+        self.new_ID = self.new_ID + 1
+        self.books.append(book)
+        
+    def search_book_by_ID(self, ID):
+        """search book by ID
+        Returns:
+            A book if it's ID is the same as the one entered
+            or
+            None if no book's ID match the one entered
+        """
+        for b in self:
             if b.ID == ID:
                 return b
         return None
 
     def search_book_by_name(self, name):
-        pass
+        """search book by name
+        Returns:
+            A book if it's name is the same as the one entered
+            or
+            None if no book's name match the one entered
+        """
+        for i in self:
+            if i.name == name: 
+                return i
+        return None
 
     def search_book_by_author(self, author):
-        pass
+        """search book by author
+        Returns:
+            A book if it's author is the same as the one entered
+            or
+            None if no book's author match the one entered
+
+        """
+        for i in self.books:
+            if i.author == author: 
+                return i
+        return None
 
     def search_book_by_DoP(self, DoP):
-        pass
+        """search book by date of publish
+        Returns:
+            A book if it's DoP is the same as the one entered
+            or
+            None if no book's DoP match the one entered
+        """
+        for i in self.books:
+            if i.DoP == DoP:
+                return i
+        return None
 
     def search_book_by_DoR(self, DoR):
-        pass
+        """search book by date of read
+        Returns:
+            A book if it's DoR is the same as the one entered
+            or
+            None if no book's DoR match the one entered                
+        """
+        for i in self.books:
+            if i.DoR == DoR:
+                return i
+        return None
 
     def search_book_by_RoS(self, RoS):
-        pass
+        """search book by review of score
+        Returns:
+            A book if it's RoS is the same as the one entered
+            or
+            None if no book's RoS match the one entered
+        """
+        for i in self.books:
+            if i.RoS == RoS:
+                return i
+        return None
+
+    def merge_sort(self, list_for_sort, sort_function):
+        """sort a list
+        Returns:
+            A sorted list
+        """
+        if len(list_for_sort) == 1:
+            return list_for_sort
+        mp = (len(list_for_sort)-1)/2
+        l = self.merge_sort(list_for_sort[:mp+1], sort_function)
+        r = self.merge_sort(list_for_sort[mp+1:], sort_function)
+        self.books = self.merge(l, r, sort_function)
+        return self.books
+
+    def merge(self, l1, l2, sort_function):
+        """merge two sorted lists
+        Returns:
+            A sorted list made out of two lists
+        """
+        res = []
+        i = 0
+        j = 0
+        while i < len(l1) and j < len(l2):
+            if sort_function(l1[i], l2[j]) > 0:
+                res.append(l2[j])
+                j = j + 1
+            elif sort_function(l1[i], l2[j]) < 0:
+                res.append(l1[i])
+                i = i + 1
+            elif sort_function(l1[i], l2[j]) == 0:
+                res.append(l1[i])
+                res.append(l2[j])
+                i += 1
+                j += 1
+        if j == len(l2):
+            return res + l1[i:]
+        else:
+            assert(i == len(l1))
+            return res + l2[j:]
 
     def sort_book_by_ID(self):
-        pass
-
-    def sort_book_by_name(self):
-        """ sort books by name
+        """sort book by ID
         Returns:
-            None
+            a sorted book list using ID
         """
-        self.books = merge_sort(self.books, BookModel.compare_by_name)
+        return self.merge_sort(self.books, BookModel.compare_by_ID)
 
+    def sort_book_by_name(self):           
+        """sort book by name               
+        Returns:                         
+            a sorted book list using name  
+        """                              
+        return self.merge_sort(self.books, BookModel.compare_by_name)
+
+    def sort_book_by_author(self):           
+        """sort book by author               
+        Returns:                         
+            a sorted book list using author  
+        """                              
+        return self.merge_sort(self.books, BookModel.compare_by_author)
+
+    def sort_book_by_DoP(self):           
+        """sort book by DoP               
+        Returns:                         
+            a sorted book list using DoP
+        """                              
+        return self.merge_sort(self.books, BookModel.compare_by_DoP)
+
+    def sort_book_by_DoR(self):           
+        """sort book by DoR               
+        Return:                         
+            a sorted book list using DoR  
+        """                              
+        return self.merge_sort(self.books, BookModel.compare_by_DoR)
+
+    def sort_book_by_RoS(self):           
+        """sort book by RoS               
+        Returns:                         
+            a sorted book list using RoS
+        """                              
+        return self.merge_sort(self.books, BookModel.compare_by_RoS)
+    
     def serialize(self):
-        """serialize the BookManager
-        Returns:
-            string : serialized result
+        """serialize all the books
+        Return:
+            a string containing all books
         """
         res = ""
         for b in self.books:
@@ -398,48 +447,41 @@ class BookManagerModel(Model):
         return res
 
     def deserialize(self, s):
-        """deserialize the object
-        Returns:
-            None
+        """deserialize a string
         """
-        for i in xrange(0, len(self.books), 6):
+        s = s.split("\n")
+        for i in xrange(0, len(s)-1, 6):
+            bookstr = "\n".join(s[i:i+6]) + "\n"
             b = BookModel()
-            b.deserialize(s[i:i+6])
+            b.deserialize(bookstr)
             self.books.append(b)
-        
 
-def merge_core(items1, items2, compare_func):
-    """merge two sorted items
-       items1: list
-       items2: list
-       compare_func: compare function
-    Returns:
-       list: merged items1 and items2 in ascendent order
+    def __iter__(self):
+        """activate the interator
+        """
+        return Iterator(self)      
+
+class Iterator:
+    """a interator
     """
-    l1 = len(items1)
-    l2 = len(items2)
-    lm = l2 if l1 >= l2 else l1
-    res = []
-    i = 0
-    j = 0
-    while i < lm and j < lm: 
-        if compare_func(items1[i], items2[j]) <= 0:
-            res.append(items1[i])
-            i = i + 1
-        else:
-            assert (compare_func(items1[i], items2[j]) > 0)
-            res.append(items2[j])
-            j = j + 1
-    while i < len(items1):
-        res.append(items1[i])
-        i = i + 1
-    while j < len(items2):
-        res.append(items2[j])
-        j = j + 1
-    return res
-    
-def merge_sort_core(items, compare_func):        
 
-def merge_sort(items, compare_func):        
-    
-    
+    def __init__(self, bm):
+        """init Iterator
+        """
+        self.index = 0
+        self.books = bm.books
+
+    def __iter__(self):
+        """activate the iterator
+        """
+        return self
+
+    def next(self):
+        """give the next book
+        """
+        res = None
+        if self.index < len(self.books):
+                res = self.books[self.index]
+                self.index = self.index + 1
+                return res
+        raise StopIteration()
