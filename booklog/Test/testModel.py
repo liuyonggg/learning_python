@@ -462,10 +462,6 @@ class BookManagerModelTest(unittest.TestCase):
         bm = BookManagerModel()
         a = "0\n#Cobblestone == LIFE\nSsundee\n2014-4-2\n2015-1-5\n5\n1\n#Bobby is awesome!\nMrCrainer\n2015-8-1\n2015-8-7\n0\n"
         bm.deserialize(a)
-        print "debug start"
-        print bm.books[0]
-        print book1
-        print "debug end"
         self.assertEqual(bm.books[0].ID, book1.ID)
         self.assertEqual(bm.books[0].name, book1.name)
         self.assertEqual(bm.books[0].author, book1.author)
