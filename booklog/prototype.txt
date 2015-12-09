@@ -109,12 +109,13 @@ RoS    5
 ========================================================================================
 
 1.6 Field Definition:
-ID: ID, 5 bytes
+ID: ID, 5 bytes(padding with space) + 1 byte *
 Name: Book Name, 40 bytes
-Author: Author Name, 15 bytes
+Author: Author Name(padding with space), 15 bytes
 DoP: Date of Publish, 10 bytes
 DoR: Date of Read, 10 bytes
 RoS: Review of Score, 0-5, 3 bytes
+every field split by one space
 
 2 Architecture
 
