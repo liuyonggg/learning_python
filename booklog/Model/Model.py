@@ -43,12 +43,12 @@ class BookModel(Model):
     def __init__(self):
         """init BookModel
         """
-        self.ID = 1
-        self.name = "a"
-        self.author = "a"
-        self.DoP = "3-2-3"
-        self.DoR = "2-3-2"
-        self.RoS = 0
+        self._ID = -1
+        self._name = ""
+        self._author = ""
+        self._DoP = ""
+        self._DoR = ""
+        self._RoS = 8
 
     def __repr__(self):
         """represent a book

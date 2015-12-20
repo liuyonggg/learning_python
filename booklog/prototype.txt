@@ -4,18 +4,19 @@ this document list the requirement and a simple prototype
 
 1.1 main view
 ========================================================================================
-ID     Name                                    Author          DoP        DoR        RoS
+*ID     Name                                    Author          DoP        DoR        RoS
 1000   The Wall Street Journal                 Monica Langley  11/13/2015 11/13/2015 5
 10010  The Alphabet From A to Z With Bonus Le  Steven Martin   11/13/2015 11/13/2015 5
 10011  GM to Sell Chinese SUVs in America      Gautham Nagesh  11/13/2015 11/13/2015 5
 ----------------------------------------------------------------------------------------
-ID*   : ID, default soft in ID
+*ID   : ID, default sort in ID
 Name  : Book Name
 Author: Author Name
 DoP   : Date of Publish
 DoR   : Date of Read
 RoS   : Review of Score
 *     : Key was used in sort 
+_     : Item you are selecting
 ----------------------------------------------------------------------------------------
 Command:
 i/I   : sorted in ID
@@ -32,6 +33,8 @@ m     : return to main view
 p     : previous page, 20 items in a page
 n     : next page, 20 items in a page
 exit  : exit program
+u     : up item
+d     : down item
 ========================================================================================
 
 1.2 add view

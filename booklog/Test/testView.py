@@ -7,6 +7,7 @@ class MockMainViewController:
     """mock controller
     """
     def __init__(self, in_file, out_file):
+        self.mv = MainView(self)
         self.bm = BookManagerModel()
         self.in_file = in_file
         self.out_file = out_file
@@ -42,13 +43,17 @@ class MockMainViewController:
     def __iter__(self):
         return self.bm.__iter__()
 
+    def run(self):
+        self.mv.display()
+        self.mv.handler()
+
 class ViewTest(unittest.TestCase):
     def setUp(self):
         self.in_file = StringIO()
         self.out_file = StringIO()
         self.controller = MockMainViewController(self.in_file, self.out_file)
         b1 = BookModel()
-        b1.ID = 0
+        b1.ID = 7
         b1.name = "weirdo"
         b1.author = "Bob"
         b1.DoP = "2004-7-7"
@@ -62,9 +67,9 @@ class ViewTest(unittest.TestCase):
         b2.DoP = "2007-7-7"
         b2.DoR = "2009-6-7"
         b2.RoS = 5
-
+        
         b3 = BookModel()
-        b3.ID = 1
+        b3.ID = 9993840
         b3.name = "zeirdo"
         b3.author = "Job"
         b3.DoP = "2007-7-7"
@@ -81,18 +86,22 @@ class ViewTest(unittest.TestCase):
         mv.display()
         res = self.out_file.getvalue()
         ref = """\
-========================================================================================
-ID     Name                                    Author          DoP        DoR        RoS
-%(books)s
-----------------------------------------------------------------------------------------
-ID*   : ID, default soft in ID
+=========================================================================================
+*ID     name                                     author          DoP        DoR        RoS 
+_0      weirdo                                   Bob             2004-7-7   2005-6-7   0   
+ 1      zeirdo                                   Job             2007-7-7   2009-6-7   5   
+ 2      zeirdo                                   Job             2007-7-7   2009-6-7   5   
+
+-----------------------------------------------------------------------------------------
+ID*   : ID, default sort in ID
 Name  : Book Name
 Author: Author Name
 DoP   : Date of Publish
 DoR   : Date of Read
 RoS   : Review of Score
-*     : Key was used in sort 
-----------------------------------------------------------------------------------------
+*     : Key was used in sort
+_     : Item you are selecting
+-----------------------------------------------------------------------------------------
 Command:
 i/I   : sorted in ID
 n/N   : sorted in Name
@@ -110,13 +119,8 @@ n     : next page, 20 items in a page
 u     : up item
 d     : down item
 exit  : exit program
-========================================================================================\
-        """
-        print res
-        #self.assertEqual(res, 
-        
-
-
+=========================================================================================        """
+        self.assertEqual(res,ref)
 
 if __name__ == '__main__':
     unittest.main()
