@@ -31,6 +31,7 @@ from Model.Model import *
 from View.View import *
 from StringIO import *
 
+#FIXME: The entire Controller should have one single BookManagerModel
 class Controller(object):
     """controller
     """
@@ -81,7 +82,9 @@ class MainViewController(Controller):
     def add_callback(self):
         """add a book
         """
-        pass
+        avc = AddViewController()
+        av = AddView(avc):
+        
 
     def edit_callback(self):
         """edit a book
@@ -115,3 +118,23 @@ class MainViewController(Controller):
     def run(self): 
         self.mv.display()
         self.mv.handler()
+
+class AddViewController(controller):
+    def __init__(self, in_file, out_file):
+        self.in_file = in_file
+        self.out_file = out_file
+        self.book = BookModel()
+        self.bm = BookManagerModel()
+
+    def add_callback(self, name, author, DoP, DoR, RoS):
+        self.book.name = self.name
+        self.book.author = self.author
+        self.book.DoP = self.DoP
+        self.bm.add_book(self.book)
+        return self.book.ID
+        
+    def write(self, msg):
+        self.out_file.write(msg)
+
+    def readline(self):
+        return self.in_file.readline()

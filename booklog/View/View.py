@@ -151,7 +151,7 @@ exit  : exit program
     def on_previous_page_handler(self):
         self.controller.previous_page_callback()
 
-Class AddView(View):
+class AddView(View):
     def __init__(self, controller):
         self.controller = controller
         self.name = raw_input("Please input book name(type return to skip or keep original value: )")
@@ -164,6 +164,32 @@ Class AddView(View):
 %(headers)s %(book)s
 ========================================================================================\
         """
-        self.headers = "ID\nName\nAuthor\nDoP\nDoR\nRoS\n"
+        self.headers = ""
+        self.book_format = ""
+        self.ID = self.controller.add_callback(self.name, self.author, self.DoP, self.DoR, self.RoS)
+        self.headers_title = ["ID", "name", "author", "DoP", "DoR", "RoS"]
+        for i in xrange(len(self.headers_title)):
+            self.book_format = self.book_format + "%%(%s)-7s\n"
+        self.book = [self.ID, self.name, self.author, self.DoP, self.DoR, self.RoS]
 
     def display(self):
+        f = "%%(%s)-7s\n"
+        for i in xrange(len(self.headers_title)):
+            self.headers = self.headers + f % (self.headers_title[i]) % {self.headers_title[i]}
+        for i in xrange(len(self.headers_title)):                            
+            self.book_format % {self.book[i]}
+
+class EditView(View):
+        def __init__(self):
+            self.ID = raw_input("Please input ID of the book you want to edit: ")
+            self.name = raw_input("Please input new book name(type return to skip or keep original value): ")
+            self.author = raw_input("Please input new book author(type return to skip or keep original value): ")
+            self.DoP = raw_input("Please input new book DoP(type return to skip or keep original value): ")
+            self.DoR = raw_input("Please input new book DoR(type return to skip or keep original value): ")
+            self.RoS = raw_input("Please input new book RoS(0 - 5)(type return to skip or keep original value): ")
+            self.format = """\
+Successfully edit the following book
+========================================================================================
+%(headers)s %(book)s
+========================================================================================\
+            """
