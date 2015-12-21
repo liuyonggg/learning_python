@@ -29,7 +29,6 @@ add   : add an item
 edit  : edit an item
 view  : view an item
 find  : find an item by Name
-m     : return to main view
 p     : previous page, 20 items in a page
 n     : next page, 20 items in a page
 exit  : exit program
@@ -228,4 +227,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
     
+6. scenario
+   6.1 start
+       controller init model and Main View, then call MainView run
+       in any case, controller maintains only one view
+   6.2 user views books
+       user will view all books in a window, also could sort books by different columns, select different books, 
+       implementation:
+           Controller calls MainView run, Mainview run will handle all user input. call controller callback if sort/previous/next, return to controller if add/edit/view/find are called
+   6.3 add/delete/edit/view a book
+       add book:
+           Main View return to Controller with return value is add book, controller will call add view, once add view finish return to controller. Then Controller will add the book to model, 
+           then call Main View
+       delete book(TBD):
+       edit book:
+           Main View return to Controller with return value is edit book, controller will call edit view with book, once add view finish return to controller. Then Controller will change the book by calling model, call Main View
+       view book:
+           Main View return to Controller with return value is view book, controller will call view view with book, once view view finish return to controller. Then Controller will call Main View
 
