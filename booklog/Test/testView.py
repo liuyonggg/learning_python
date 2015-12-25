@@ -119,8 +119,10 @@ n     : next page, 20 items in a page
 u     : up item
 d     : down item
 exit  : exit program
-=========================================================================================        """
+=========================================================================================       """
         self.assertEqual(res,ref)
+        self.assertEqual(res[len(res)/2:],ref[len(ref)/2:])
+        self.assertEqual(len(res), len(ref))
 
 if __name__ == '__main__':
     unittest.main()

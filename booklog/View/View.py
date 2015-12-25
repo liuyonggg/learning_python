@@ -82,7 +82,7 @@ find  : find an item by Name
 m     : return to main view
 p     : previous page, 20 items in a page
 n     : next page, 20 items in a page
-u     : up item
+u     : up iem
 d     : down item
 exit  : exit program
 =========================================================================================\
@@ -130,18 +130,18 @@ exit  : exit program
 
     def on_sort_book_by_ID_handler(self):
         self.sort_index = 0
-        self.controller.sort_book_by_ID()
+        self.controller.return_value_handler("i")
         self.load_books()
         self.display()
 
     def on_add_book_handler(self):
-        self.controller.add_callback()
+        self.controller.return_value_handler("add")
 
     def on_view_handler(self):
         self.controller.view_callback(self.books[self.book_index])
 
     def on_exit_handler(self):
-        self.controller.exit_mainview_callback()
+        self.controller.return_value_handler("exit")
 
     def on_up_handler(self):
         if self.book_index > 0:
@@ -150,6 +150,11 @@ exit  : exit program
 
     def on_previous_page_handler(self):
         self.controller.previous_page_callback()
+
+    def run(self):
+        self.load_books()
+        self.display()
+        self.handler()
 
 class AddView(View):
     def __init__(self, controller):
@@ -166,7 +171,7 @@ class AddView(View):
         """
         self.headers = ""
         self.book_format = ""
-        self.ID = self.controller.add_callback(self.name, self.author, self.DoP, self.DoR, self.RoS)
+        self.ID = self.controller.add_books(self.name, self.author, self.DoP, self.DoR, self.RoS)
         self.headers_title = ["ID", "name", "author", "DoP", "DoR", "RoS"]
         for i in xrange(len(self.headers_title)):
             self.book_format = self.book_format + "%%(%s)-7s\n"
@@ -178,6 +183,7 @@ class AddView(View):
             self.headers = self.headers + f % (self.headers_title[i]) % {self.headers_title[i]}
         for i in xrange(len(self.headers_title)):                            
             self.book_format % {self.book[i]}
+        self.controller.write(self.format % {"headers":self.headers, "book":book})
 
 class EditView(View):
         def __init__(self):
