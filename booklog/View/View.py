@@ -117,7 +117,6 @@ exit   : exit program
                 books = books + self.bookFormat % {"ID":" %-7d"%book.ID, "name":book.name if len(book.name) < 42 else book.name[:41], "author":book.author if len(book.author) < 17 else book.name[:16], "DoP":book.DoP if len(book.DoP) < 12 else book.DoP[:11], "DoR":book.DoR if len(book.DoR) < 12 else book.DoR[:11], "RoS":book.RoS} + "\n"
             i += 1
         self.controller.write(self.format % {"headers":self.headers, "books":books})
-        print self.format % {"headers":self.headers, "books":books}
 
     def handler(self):
         while True:
@@ -213,49 +212,38 @@ class AddView(View):
 %(book)s
 ========================================================================================\
         """
+        self.name = None
+        self.author = None
+        self.DoP = None
+        self.DoR = None
+        self.RoS = None
+ 
         headers = ["ID", "Name", "Author", "DoP", "DoR", "RoS"]
         for i in xrange(len(headers)):
             self.book_format += "%-7s: %%(%s)s\n" % (headers[i], headers[i])
 
-    def display(self):
-        self.name = raw_input("Please input book name(type return to skip or keep original value: )")
-        if self.name == "m":
-            self.controller.run()
-
-        self.author = raw_input("Please input book author(type return to skip or keep original value: )")
-        if self.author == "m":
-            self.controller.run()
-
-        self.DoP = raw_input("Please input Date of Publish(type return to skip or keep original value: )")
-        if self.DoP == "m":
-            self.controller.run()
-
-        self.DoR = raw_input("Please input Date of Read(type return to skip or keep original value: )")
-        if self.DoR == "m":
-            self.controller.run()
-
-        self.RoS = raw_input("Please input Review of Score(0 - 5)(type return to skip or keep original value: )")
-        if self.RoS == "m":
-            self.controller.run()
-
-        if not self.name:
-            self.name = "None"
-        if not self.author:
-            self.author = "None"
-        if not self.DoP:
-            self.DoP = "None"
-        if not self.DoR:
-            self.DoR = "None"
-        if not self.RoS:
-            self.RoS = "None"
-        self.ID = self.controller.add_book_callback(self.name, self.author, self.DoP, self.DoR, self.RoS)
-
-        book = self.book_format % {"ID":self.ID, "Name":self.name, "Author":self.author, "DoP":self.DoP, "DoR":self.DoR, "RoS":self.RoS}
-        self.controller.write(self.format % {"book":book})
-        print self.format % {"book":book}
+    def display(self, prompt):
+        self.controller.write(prompt)
 
     def run(self):
-        self.display()
+        expectInput = ["book name", "book author", "book DoP", "book DoR", "book RoS"]
+        expectInputValue = []
+        for i in xrange(len(expectInput)):
+            self.display("Please input %s(type return to skip value): " % expectInput[i])
+            s = self.controller.getvalue()
+            if s == 'm':
+                return False
+            expectInputValue.append(s)
+        ## FIXME: need give prompt for wrong input
+        if not self.controller.validate_book(*expectInputValue):
+            ## self.display("can't add the book, input is not valid")
+            return False
+        self.name = expectInputValue[0]
+        self.author = expectInputValue[1]
+        self.DoP = expectInputValue[2]
+        self.DoR = expectInputValue[3]
+        self.RoS = int(expectInputValue[4])
+        return True
 
 class EditView(View):
     def __init__(self, controller):

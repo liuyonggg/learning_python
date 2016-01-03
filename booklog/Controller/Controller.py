@@ -104,8 +104,18 @@ class BookController(Controller):
 
     def add_book(self):
         av = AddView(self)
-        av.run()
+        if av.run():
+            book = BookModel()
+            book.name = av.name
+            book.author = av.author
+            book.DoP = av.DoP
+            book.DoR = av.DoR
+            book.RoS = av.RoS
+            bm.add_book(book)
         self.mv.run()
+
+    def validate_book(self, name, author, DoP, DoR, RoS):
+        return name and author and DoP and DoR and RoS and RoS.isdigit()
 
     def add_book_callback(self, name, author, DoP, DoR, RoS):
         self.book.name = name
