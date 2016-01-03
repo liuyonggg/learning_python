@@ -45,11 +45,11 @@ class BookController(Controller):
         self.in_file = in_file
         self.out_file = out_file
         self.book = BookModel()
-        # FIXME: fix edit/delete
-        self.command_table = {"add book":self.add_book, "view book":self.view_book, "exit":self.exit_program}
+        self.command_table = {"add book":self.add_book, "edit book":self.edit_book, "view book":self.view_book, "exit":self.exit_program, "delete book":self.delete_book, "find book":self.find_book}
+        self.number_books = 0
 
     def command_handler(self, return_value):
-        self.command_table[return_value]
+        self.command_table[return_value]()
 
     def sort_book_by_ID_callback(self):
         """sort books by ID
@@ -84,21 +84,26 @@ class BookController(Controller):
     def previous_page_callback(self):
         """get to the previous page
         """
-        pass
+        if self.number_books > 0:
+            self.number_books -= 20
+        self.mv.run()
 
     def next_page_callback(self):
         """get to the next page
         """
-        pass
+        remainder = len(self.bm.books) - 1 % 20
+        if self.number_books < len(self.bm.books)-1-remainder:
+            self.number_books += 20
+        self.mv.run()
              
     def write(self, msg):
         self.out_file.write(msg)
         
-    def readline(self):
-        return self.in_file.readline()
+    def getvalue(self):
+        return self.in_file.getvalue()
 
     def add_book(self):
-        av = AddView()
+        av = AddView(self)
         av.run()
         self.mv.run()
 
@@ -111,32 +116,70 @@ class BookController(Controller):
         self.bm.add_book(self.book)
         return self.book.ID
 
-    def view_book(self, book_to_view):
-        vv = ViewView(self, book_to_view)
+    def view_book(self):
+        vv = ViewView(self, self.bm.books[self.mv.book_index])
         vv.run()
         self.mv.run()
 
     def __iter__(self):
-        return self.bm.__iter__() 
+        return self.bm.__iter__(self.number_books) 
 
     def exit_program(self):
-        pass
+        return self.bm.serialize()
 
     def run(self):
         self.mv.run()
-"""
+
     def edit_callback(self, ID, name, author, DoP, DoR, RoS):
-        del bm.books[ID]
-        book = BookModel()
-        book.name = name
-        book.author = author
-        book.DoP = DoP
-        book.DoR = DoR
-        book.RoS = RoS
-        bm.add_book(book)
-        return book.ID
+        b1 = BookModel()
+        b2 = BookModel()
+        b3 = BookModel()
+        b3.name = "hi"
+        b3.author = "Bob"
+        b3.DoP = "5/3/2193"
+        b3.DoR = "8/3/5736"
+        b3.RoS = 5
+        self.bm.add_book(b3)
+        
+        ID = int(ID)
+        b1 = self.bm.books[ID]
+        
+        if name == "None":
+            name = b1.name
+        if author == "None":
+            author = b1.author
+        if DoP == "None":
+            DoP = b1.DoP
+        if DoR == "None":
+            DoR = b1.DoR
+        if RoS == "None":
+            RoS == b1.RoS
+
+        del self.bm.books[ID]
+        b2.name = name
+        b2.author = author
+        b2.DoP = DoP
+        b2.DoR = DoR
+        b2.RoS = RoS
+
+        self.bm.add_book(b2)
+        return b2.ID
 
     def edit_book(self):
-        ev = EditView()
-        ev.display()
-"""
+        ev = EditView(self)
+        ev.run()
+        self.mv.run()
+
+    def delete_book(self):
+        dv = DeleteView(self, self.bm.books[self.mv.book_index])
+        dv.run()
+        del self.bm.books[self.mv.book_index]
+        self.mv.run()
+
+    def find_book(self):
+        fv = FindView(self)
+        fv.run()
+        self.mv.run()
+
+    def find_callback(self, name):
+        return self.bm.search_book_by_name(name)

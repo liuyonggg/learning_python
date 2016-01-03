@@ -243,7 +243,7 @@ class BookModel(Model):
         Return:
             a string containing the book
         """
-        return "%d\n%s\n%s\n%s\n%s\n%d\n" % (self._ID, self._name, self._author, self._DoP, self._DoR, self._RoS)
+        return "%d\n%s\n%s\n%s\n%s\n%s\n" % (self._ID, self._name, self._author, self._DoP, self._DoR, self._RoS)
 
     def deserialize(self, s):
         """deserialize s
@@ -456,19 +456,19 @@ class BookManagerModel(Model):
             b.deserialize(bookstr)
             self.books.append(b)
 
-    def __iter__(self):
+    def __iter__(self, starting_index=0):
         """activate the interator
         """
-        return Iterator(self)      
+        return Iterator(self, starting_index)      
 
 class Iterator:
     """a interator
     """
 
-    def __init__(self, bm):
+    def __init__(self, bm, starting_index):
         """init Iterator
         """
-        self.index = 0
+        self.index = starting_index
         self.books = bm.books
 
     def __iter__(self):
