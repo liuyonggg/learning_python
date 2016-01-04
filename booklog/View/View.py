@@ -203,106 +203,54 @@ exit   : exit program
         self.display()
         self.handler()
 
-class AddView(View):
-    def __init__(self, controller):
+class AddEditView(View):
+    def __init__(self, controller, type):
         self.controller = controller
-        self.book_format = ""
-        self.format = """\
-========================================================================================
-%(book)s
-========================================================================================\
-        """
         self.name = None
         self.author = None
         self.DoP = None
         self.DoR = None
         self.RoS = None
+        self.type = type
  
-        headers = ["ID", "Name", "Author", "DoP", "DoR", "RoS"]
-        for i in xrange(len(headers)):
-            self.book_format += "%-7s: %%(%s)s\n" % (headers[i], headers[i])
-
     def display(self, prompt):
         self.controller.write(prompt)
 
     def run(self):
         expectInput = ["book name", "book author", "book DoP", "book DoR", "book RoS"]
         expectInputValue = []
-        for i in xrange(len(expectInput)):
-            self.display("Please input %s(type return to skip value): " % expectInput[i])
-            s = self.controller.getvalue()
-            if s == 'm':
+        if self.type == "add":
+            for i in xrange(len(expectInput)):
+                self.display("Please input %s(type return to skip value): " % expectInput[i])
+                s = self.controller.getvalue()
+                if s == 'm':
+                    return False
+                expectInputValue.append(s)
+            ## FIXME: need give prompt for wrong input
+            if not self.controller.validate_book(self.type, *expectInputValue):
+                ## self.display("can't add the book, input is not valid")
                 return False
-            expectInputValue.append(s)
-        ## FIXME: need give prompt for wrong input
-        if not self.controller.validate_book(*expectInputValue):
-            ## self.display("can't add the book, input is not valid")
-            return False
+
+        elif self.type == "edit":
+            for i in xrange(len(expectInput)):
+                self.display("Please input %s(type return to keep original value): " % expectInput[i])
+                s = self.controller.getvalue()
+                if s == 'm':
+                    return False
+                if s == "":
+                    s = "None"
+                expectInputValue.append(s)
+            ## FIXME: need give prompt for wrong input
+            if not self.controller.validate_book(self.type, *expectInputValue):
+                ## self.display("can't edit the book, input is not valid")
+                return False
+
         self.name = expectInputValue[0]
         self.author = expectInputValue[1]
         self.DoP = expectInputValue[2]
         self.DoR = expectInputValue[3]
         self.RoS = int(expectInputValue[4])
         return True
-
-class EditView(View):
-    def __init__(self, controller):
-        self.book_format = ""
-        self.controller = controller
-        self.format = """\
-Successfully edit the following book
-========================================================================================
-%(book)s
-========================================================================================\
-            """
-        headers = ["ID", "Name", "Author", "DoP", "DoR", "RoS"]
-        for i in xrange(len(headers)):
-            self.book_format = self.book_format + "%-7s: %%(%s)s\n" % (headers[i], headers[i])
-
-    def display(self):
-        self.ID = raw_input("Please input ID of the book you want to edit: ")
-        if self.ID == "m":
-            self.controller.run()
-
-        self.name = raw_input("Please input new book name(type return to skip or keep original value): ")
-        if self.name == "m":
-            self.controller.run()
-
-        self.author = raw_input("Please input new book author(type return to skip or keep original value): ")
-        if self.author == "m":
-            self.controller.run()
-
-        self.DoP = raw_input("Please input new book DoP(type return to skip or keep original value): ")
-        if self.DoP == "m":
-            self.controller.run()
-
-        self.DoR = raw_input("Please input new book DoR(type return to skip or keep original value): ")
-        if self.DoR == "m":
-            self.controller.run()
-
-        self.RoS = raw_input("Please input new book RoS(0 - 5)(type return to skip or keep original value): ")
-        if self.RoS == "m":
-            self.controller.run()
-
-        if not self.name:
-            self.name = "None"
-        if not self.author:
-            self.author = "None"
-        if not self.DoP:
-            self.DoP = "None"
-        if not self.DoR:
-            self.DoR = "None"
-        if self.RoS == "":
-            self.RoS = "None"
-
-        self.ID = self.controller.edit_callback(self.ID, self.name, self.author, self.DoP, self.DoR, self.RoS)
-
-        book = self.book_format % {"ID":self.ID, "Name":self.name, "Author":self.author, "DoP":self.DoP, "DoR":self.DoR, "RoS":self.RoS}
-        self.controller.write(self.format % {"book":book})
-        print self.format % {"book":book}
-
-    def run(self):
-        self.display()
 
 class ViewView(View):
     def __init__(self, controller, book):
@@ -327,35 +275,6 @@ class ViewView(View):
     def display(self):
         book = self.book_format % {"ID":self.ID, "Name":self.name, "Author":self.author, "DoP":self.DoP, "DoR":self.DoR, "RoS":self.RoS}
         self.controller.write(self.format % {"book":book})
-        print self.format % {"book":book}
-
-    def run(self):
-        self.display()
-
-class DeleteView(View):
-    def __init__(self, controller, book):
-        self.controller = controller
-        self.ID = book.ID
-        self.name = book.name
-        self.author = book.author
-        self.DoP = book.DoP
-        self.DoR = book.DoR
-        self.RoS = book.RoS
-        self.book_format = ""
-        self.format = """\
-Successfully delete the following book
-========================================================================================
-%(book)s
-========================================================================================\
-        """
-        headers = ["ID", "Author", "Author", "DoP", "DoR", "RoS"]
-        for i in xrange(6):
-            self.book_format += "%-7s: %%(%s)s\n" % (headers[i], headers[i])
-
-    def display(self):
-        book = self.book_format % {"ID":self.ID, "Name":self.name, "Author":self.author, "DoP":self.DoP, "DoR":self.DoR, "RoS":self.RoS}
-        self.controller.write(self.format % {"book":book})
-        print self.format % {"book":book}
 
     def run(self):
         self.display()
@@ -376,7 +295,7 @@ Successfully found the following book
             self.book_format = self.book_format + "%-7s: %%(%s)s\n" % (headers[i], headers[i])
 
     def display(self):
-        name = raw_input("Please input the name of the book you want to edit: ")
+        name = self.controller.getvalue()
         if name == "m":
             self.controller.run()
         book = self.controller.find_callback(name)
@@ -390,11 +309,20 @@ Successfully found the following book
 
             book = self.book_format % {"ID":ID, "Name":name, "Author":author, "DoP":DoP, "DoR":DoR, "RoS":RoS}
             self.controller.write(self.format % {"book":book})
-            print self.format % {"book":book}
 
         else:
             self.controller.write("There is no book with the name of %s"%name)
-            print "There is no book with the name of", name
 
     def run(self):
+        name = self.controller.getvalue()
+        if name == "m":
+            self.controller.run()
+        book = self.controller.find_callback(name)
+        if book != None:
+            ID = book.ID
+            name = book.name
+            author = book.author
+            DoP = book.DoP
+            DoR = book.DoR
+            RoS = book.RoS
         self.display()

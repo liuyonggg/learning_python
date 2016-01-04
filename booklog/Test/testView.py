@@ -36,6 +36,9 @@ class MockMainViewController:
         """
         pass
 
+    def find_callback(self, name):
+        return self.bm.search_book_by_name(name)
+
     def write(self, msg):
         self.out_file.write(msg)
         
@@ -55,8 +58,11 @@ class MockMainViewController:
         self.inValues = s.split('\n')
         self.inValuesIndex = 0
 
-    def validate_book(self, name, author, DoP, DoR, RoS):
-        return name and author and DoP and DoR and RoS and RoS.isdigit()
+    def validate_book(self, type, name, author, DoP, DoR, RoS):
+        if type == "add":
+            return name and author and DoP and DoR and RoS != None and RoS.isdigit()
+        elif type == "edit":
+            return RoS.isdigit()
 
 class ViewTest(unittest.TestCase):
     def setUp(self):
@@ -101,7 +107,7 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(res, ref)
 
     def testAddViewCorrect(self):
-        av = AddView(self.controller)
+        av = AddEditView(self.controller, "add")
         name = "book1"
         author = "author1"
         dop = "1/3/2016"
@@ -118,7 +124,7 @@ class ViewTest(unittest.TestCase):
         self.assertEqual(av.RoS, ros)
 
     def testAddViewWrong(self):
-        av = AddView(self.controller)
+        av = AddEditView(self.controller, "add")
         name = ""
         author = "author1"
         dop = "1/3/2016"
@@ -135,7 +141,7 @@ class ViewTest(unittest.TestCase):
         self.assertIsNone(av.RoS)
 
     def testAddViewEscape(self):
-        av = AddView(self.controller)
+        av = AddEditView(self.controller, "add")
         name = ""
         author = "author1"
         dop = "1/3/2016"
@@ -151,6 +157,84 @@ class ViewTest(unittest.TestCase):
         self.assertIsNone(av.DoR)
         self.assertIsNone(av.RoS)
         
+    def testEditViewCorrect(self):
+        av = AddEditView(self.controller, "edit")
+        name= "d"
+        author = "author1"
+        dop = "1/3/2016"
+        dor = "1/5/2016"
+        ros = 0
+        add = "%s\n%s\n%s\n%s\n%d" % (name, author, dop, dor, ros)
+        self.controller.setInputValue(add)
+        ret = av.run()
+        self.assertTrue(ret)
+        self.assertEqual(name, av.name)
+        self.assertEqual(author, av.author)
+        self.assertEqual(dop, av.DoP)
+        self.assertEqual(dor, av.DoR)
+        self.assertEqual(ros, av.RoS)
+
+    def testEditViewWrong(self):
+        av = AddEditView(self.controller, "edit")
+        name = "sdfs"
+        author = "author1"
+        dop = "1/3/2016"
+        dor = "1/5/2016"
+        ros = "jfkldj"
+        add = "%s\n%s\n%s\n%s\n%s" % (name, author, dop, dor, ros)
+        self.controller.setInputValue(add)
+        ret = av.run()
+        self.assertFalse(ret)
+        self.assertIsNone(av.name)
+        self.assertIsNone(av.author)
+        self.assertIsNone(av.DoP)
+        self.assertIsNone(av.DoR)
+        self.assertIsNone(av.RoS)
+
+    def testEditViewEscape(self):
+        av = AddEditView(self.controller, "add")
+        name = ""
+        author = "author1"
+        dop = "1/3/2016"
+        dor = "1/5/2016"
+        ros = "m"
+        add = "%s\n%s\n%s\n%s\n%s" % (name, author, dop, dor, ros)
+        self.controller.setInputValue(add)
+        ret = av.run()
+        self.assertFalse(ret)
+        self.assertIsNone(av.name)
+        self.assertIsNone(av.author)
+        self.assertIsNone(av.DoP)
+        self.assertIsNone(av.DoR)
+        self.assertIsNone(av.RoS)
+
+    def testViewView(self):
+        book = BookModel()
+        book.ID = 0
+        book.name = "Awesomeness!!!"
+        book.author = "me"
+        book.DoP = "1/3/2016"
+        book.DoR = "1/7/2016"
+        book.RoS = 5
+
+        vv = ViewView(self.controller, book)
+        vv.run()
+        self.assertEqual(self.controller.out_file.getvalue(), "========================================================================================\nID     : 0\nName   : Awesomeness!!!\nAuthor : me\nDoP    : 1/3/2016\nDoR    : 1/7/2016\nRoS    : 5\n\n========================================================================================        ")
+
+    def testFindView(self):
+        book = BookModel()
+        book.ID = 0
+        book.name = "Awesomeness!!!"
+        book.author = "me"
+        book.DoP = "1/3/2016"
+        book.DoR = "1/7/2016"
+        book.RoS = 5
+        self.controller.add_book(book)
+        name = "\nAwesomeness!!!"
+        fv = FindView(self.controller)
+        self.controller.setInputValue(name)
+        fv.run()
+        self.assertEqual(self.controller.out_file.getvalue(), "Successfully found the following book\n========================================================================================\nID     : 3\nName   : Awesomeness!!!\nAuthor : me\nDoP    : 1/3/2016\nDoR    : 1/7/2016\nRoS    : 5\n\n========================================================================================        ")
 
 if __name__ == '__main__':
     unittest.main()

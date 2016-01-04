@@ -103,7 +103,7 @@ class BookController(Controller):
         return self.in_file.getvalue()
 
     def add_book(self):
-        av = AddView(self)
+        av = AddView(self, "add")
         if av.run():
             book = BookModel()
             book.name = av.name
@@ -116,15 +116,6 @@ class BookController(Controller):
 
     def validate_book(self, name, author, DoP, DoR, RoS):
         return name and author and DoP and DoR and RoS and RoS.isdigit()
-
-    def add_book_callback(self, name, author, DoP, DoR, RoS):
-        self.book.name = name
-        self.book.author = author
-        self.book.DoP = DoP
-        self.book.DoR = DoR
-        self.book.RoS = RoS
-        self.bm.add_book(self.book)
-        return self.book.ID
 
     def view_book(self):
         vv = ViewView(self, self.bm.books[self.mv.book_index])
@@ -143,13 +134,6 @@ class BookController(Controller):
     def edit_callback(self, ID, name, author, DoP, DoR, RoS):
         b1 = BookModel()
         b2 = BookModel()
-        b3 = BookModel()
-        b3.name = "hi"
-        b3.author = "Bob"
-        b3.DoP = "5/3/2193"
-        b3.DoR = "8/3/5736"
-        b3.RoS = 5
-        self.bm.add_book(b3)
         
         ID = int(ID)
         b1 = self.bm.books[ID]
@@ -181,8 +165,6 @@ class BookController(Controller):
         self.mv.run()
 
     def delete_book(self):
-        dv = DeleteView(self, self.bm.books[self.mv.book_index])
-        dv.run()
         del self.bm.books[self.mv.book_index]
         self.mv.run()
 
