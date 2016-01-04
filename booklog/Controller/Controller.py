@@ -103,7 +103,7 @@ class BookController(Controller):
         return self.in_file.getvalue()
 
     def add_book(self):
-        av = AddView(self, "add")
+        av = AddEditView(self, "add")
         if av.run():
             book = BookModel()
             book.name = av.name
@@ -111,11 +111,15 @@ class BookController(Controller):
             book.DoP = av.DoP
             book.DoR = av.DoR
             book.RoS = av.RoS
-            bm.add_book(book)
-        self.mv.run()
+            self.bm.add_book(book)
+        self.mv.load_books()
+        self.mv.display()
 
-    def validate_book(self, name, author, DoP, DoR, RoS):
-        return name and author and DoP and DoR and RoS and RoS.isdigit()
+    def validate_book(self, type, name, author, DoP, DoR, RoS):
+        if type == "add":
+            return name and author and DoP and DoR and RoS != None and RoS.isdigit()
+        elif type == "edit":
+            return RoS.isdigit()
 
     def view_book(self):
         vv = ViewView(self, self.bm.books[self.mv.book_index])

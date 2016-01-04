@@ -91,6 +91,7 @@ exit   : exit program
 
     def load_books(self):
         i = 0
+        self.books = []
         for book in self.controller:
             if i < self.booksInAPage:
                 self.books.append(book)
@@ -120,7 +121,8 @@ exit   : exit program
 
     def handler(self):
         while True:
-            command = raw_input("Please input your command ")
+            self.controller.write("Please input your command ")
+            command = self.controller.getvalue()
             if command not in self.command_table:
                 print "Opps!!!, that is an invalid command."
             else:
