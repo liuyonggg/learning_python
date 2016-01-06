@@ -270,8 +270,28 @@ class TestInterator(unittest.TestCase):
         bm = BookManagerModel()
         bm.add_book(book)
 
-        for i in bm:
-            self.assertEqual(i, book)
+        for book in bm:
+            self.assertEqual(book, book)
+
+    def test_starting_index(self):
+        bm = BookManagerModel()
+        book_list = []
+        j = 20
+        for i in xrange(324):
+            book = BookModel()
+            book.name = "name_%d" % i
+            book.author = "author_%d" % i
+            book.DoP = "12/29/2015"
+            book.DoR = "12/29/2015"
+            book.RoS = 5
+            bm.add_book(book)
+            book_list.append(book)
+        i = 20
+
+        bm.change_starting_index(i)
+        for book in bm:
+            self.assertEqual(book, book_list[j])
+            j += 1
 
 if __name__ == '__main__':
     unittest.main()

@@ -272,6 +272,7 @@ class BookManagerModel(Model):
     def __init__(self):
         """init BookManagerModel 
         """
+        self.starting_index = 0
         self.books = []
         self.new_ID = len(self.books)
     
@@ -456,19 +457,24 @@ class BookManagerModel(Model):
             b.deserialize(bookstr)
             self.books.append(b)
 
-    def __iter__(self, starting_index=0):
+    def change_starting_index(self, index):
+        """change the starting index
+        """
+        self.starting_index = index
+
+    def __iter__(self):
         """activate the interator
         """
-        return Iterator(self, starting_index)      
+        return Iterator(self)      
 
 class Iterator:
     """a interator
     """
 
-    def __init__(self, bm, starting_index):
+    def __init__(self, bm):
         """init Iterator
         """
-        self.index = starting_index
+        self.index = bm.starting_index
         self.books = bm.books
 
     def __iter__(self):

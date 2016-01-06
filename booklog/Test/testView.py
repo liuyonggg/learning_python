@@ -48,7 +48,7 @@ class MockMainViewController:
         return ret
 
     def __iter__(self):
-        return self.bm.__iter__(0)
+        return self.bm.__iter__()
 
     def run(self):
         self.mv.display()

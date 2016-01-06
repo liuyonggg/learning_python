@@ -84,18 +84,19 @@ class BookController(Controller):
     def previous_page_callback(self):
         """get to the previous page
         """
-        if self.number_books > 0:
-            self.number_books -= 20
-        self.mv.run()
+        if self.number_books - MainView.booksInAPage >= 0:
+            self.number_books -= MainView.booksInAPage
+        self.mv.load_books()
+        self.mv.display()
 
     def next_page_callback(self):
         """get to the next page
         """
-        remainder = len(self.bm.books) - 1 % 20
-        if self.number_books < len(self.bm.books)-1-remainder:
-            self.number_books += 20
-        self.mv.run()
-             
+        if self.number_books + MainView.booksInAPage < len(self.bm.books):
+            self.number_books += MainView.booksInAPage
+        self.mv.load_books()
+        self.mv.display()
+
     def write(self, msg):
         self.out_file.write(msg)
         
@@ -124,10 +125,11 @@ class BookController(Controller):
     def view_book(self):
         vv = ViewView(self, self.bm.books[self.mv.book_index])
         vv.run()
-        self.mv.run()
+        self.mv.display()
 
     def __iter__(self):
-        return self.bm.__iter__(self.number_books) 
+        self.bm.change_starting_index(self.number_books)
+        return self.bm.__iter__() 
 
     def exit_program(self):
         return self.bm.serialize()
@@ -135,42 +137,31 @@ class BookController(Controller):
     def run(self):
         self.mv.run()
 
-    def edit_callback(self, ID, name, author, DoP, DoR, RoS):
-        b1 = BookModel()
-        b2 = BookModel()
-        
-        ID = int(ID)
-        b1 = self.bm.books[ID]
-        
-        if name == "None":
-            name = b1.name
-        if author == "None":
-            author = b1.author
-        if DoP == "None":
-            DoP = b1.DoP
-        if DoR == "None":
-            DoR = b1.DoR
-        if RoS == "None":
-            RoS == b1.RoS
-
-        del self.bm.books[ID]
-        b2.name = name
-        b2.author = author
-        b2.DoP = DoP
-        b2.DoR = DoR
-        b2.RoS = RoS
-
-        self.bm.add_book(b2)
-        return b2.ID
-
     def edit_book(self):
-        ev = EditView(self)
+        ev = AddEditView(self, "edit")
         ev.run()
-        self.mv.run()
+        book = self.bm.books[self.mv.book_index]
+        if ev.name:
+            book.name = ev.name
+        if ev.author:
+            book.author = ev.author
+        if ev.DoP:
+            book.DoP = ev.DoP
+        if ev.DoR:
+            book.DoR = ev.DoR
+        if ev.RoS >= 0:
+            book.RoS = ev.RoS
+        self.mv.load_books()
+        self.mv.display()
 
     def delete_book(self):
-        del self.bm.books[self.mv.book_index]
-        self.mv.run()
+        if self.mv.book_index < len(self.bm.books):
+            del self.bm.books[self.mv.book_index]
+        else:
+            self.write("You need to add a book in order to delete!")
+
+        self.mv.load_books()
+        self.mv.display()
 
     def find_book(self):
         fv = FindView(self)

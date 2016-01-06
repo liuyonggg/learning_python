@@ -41,11 +41,12 @@ class View(object):
         return self
 
 class MainView(View):
+    booksInAPage = 20
     def __init__(self, controller):
         self.books = []
         self.sort_index = 0
         self.controller = controller
-        self.booksInAPage = 20
+        self.booksInAPage = MainView.booksInAPage
         self.headers_title = ["ID", "name", "author", "DoP", "DoR", "RoS"]
         self.headers_width = [7, 41, 16, 11, 11, 4]
         self.headers_type = ["s", "s", "s", "s", "s", "s"]
@@ -239,8 +240,6 @@ class AddEditView(View):
                 s = self.controller.getvalue()
                 if s == 'm':
                     return False
-                if s == "":
-                    s = "None"
                 expectInputValue.append(s)
             ## FIXME: need give prompt for wrong input
             if not self.controller.validate_book(self.type, *expectInputValue):
