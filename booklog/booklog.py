@@ -31,9 +31,12 @@ from Model.Model import *
 from View.View import *
 from Controller.Controller import *
 import StringIO
+import sys
 
-out_file = StringIO.StringIO()
-in_file = StringIO.StringIO()
+#out_file = StringIO.StringIO()
+#in_file = StringIO.StringIO()
+in_file = sys.stdin
+out_file = sys.stdout
 db_file = ""
 bc = BookController(in_file,out_file, db_file)
 bc.run()

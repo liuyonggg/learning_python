@@ -1,0 +1,208 @@
+=========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_0     name_0                                   author_0        12/29/2015 12/29/2015 5   
+ 1     name_1                                   author_1        12/29/2015 12/29/2015 5   
+ 2     name_2                                   author_2        12/29/2015 12/29/2015 5   
+ 3     name_3                                   author_3        12/29/2015 12/29/2015 5   
+ 4     name_4                                   author_4        12/29/2015 12/29/2015 5   
+ 5     name_5                                   author_5        12/29/2015 12/29/2015 5   
+ 6     name_6                                   author_6        12/29/2015 12/29/2015 5   
+ 7     name_7                                   author_7        12/29/2015 12/29/2015 5   
+ 8     name_8                                   author_8        12/29/2015 12/29/2015 5   
+ 9     name_9                                   author_9        12/29/2015 12/29/2015 5   
+ 10    name_10                                  author_10       12/29/2015 12/29/2015 5   
+ 11    name_11                                  author_11       12/29/2015 12/29/2015 5   
+ 12    name_12                                  author_12       12/29/2015 12/29/2015 5   
+ 13    name_13                                  author_13       12/29/2015 12/29/2015 5   
+ 14    name_14                                  author_14       12/29/2015 12/29/2015 5   
+ 15    name_15                                  author_15       12/29/2015 12/29/2015 5   
+ 16    name_16                                  author_16       12/29/2015 12/29/2015 5   
+ 17    name_17                                  author_17       12/29/2015 12/29/2015 5   
+ 18    name_18                                  author_18       12/29/2015 12/29/2015 5   
+ 19    name_19                                  author_19       12/29/2015 12/29/2015 5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      Please input your command =========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_20    name_20                                  author_20       12/29/2015 12/29/2015 5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      Please input your command =========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_0     name_0                                   author_0        12/29/2015 12/29/2015 5   
+ 1     name_1                                   author_1        12/29/2015 12/29/2015 5   
+ 2     name_2                                   author_2        12/29/2015 12/29/2015 5   
+ 3     name_3                                   author_3        12/29/2015 12/29/2015 5   
+ 4     name_4                                   author_4        12/29/2015 12/29/2015 5   
+ 5     name_5                                   author_5        12/29/2015 12/29/2015 5   
+ 6     name_6                                   author_6        12/29/2015 12/29/2015 5   
+ 7     name_7                                   author_7        12/29/2015 12/29/2015 5   
+ 8     name_8                                   author_8        12/29/2015 12/29/2015 5   
+ 9     name_9                                   author_9        12/29/2015 12/29/2015 5   
+ 10    name_10                                  author_10       12/29/2015 12/29/2015 5   
+ 11    name_11                                  author_11       12/29/2015 12/29/2015 5   
+ 12    name_12                                  author_12       12/29/2015 12/29/2015 5   
+ 13    name_13                                  author_13       12/29/2015 12/29/2015 5   
+ 14    name_14                                  author_14       12/29/2015 12/29/2015 5   
+ 15    name_15                                  author_15       12/29/2015 12/29/2015 5   
+ 16    name_16                                  author_16       12/29/2015 12/29/2015 5   
+ 17    name_17                                  author_17       12/29/2015 12/29/2015 5   
+ 18    name_18                                  author_18       12/29/2015 12/29/2015 5   
+ 19    name_19                                  author_19       12/29/2015 12/29/2015 5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      Please input your command 
+=========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_0     name1                                    author1         12/29/2015 12/29/2015 5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      Please input your command ========================================================================================
+ID     : 0
+Name   : name1
+Author : author1
+DoP    : 12/29/2015
+DoR    : 12/29/2015
+RoS    : 5
+
+========================================================================================        =========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_0     name1                                    author1         12/29/2015 12/29/2015 5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      Please input your command 

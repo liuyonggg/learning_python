@@ -102,7 +102,43 @@ class ViewTest(unittest.TestCase):
         mv.load_books()
         mv.display()
         res = self.out_file.getvalue()
-        ref = "=========================================================================================\n*ID     name                                     author          DoP        DoR        RoS \n_0      weirdo                                   Bob             2004-7-7   2005-6-7   0   \n 1      zeirdo                                   Job             2007-7-7   2009-6-7   5   \n 2      zeirdo                                   Job             2007-7-7   2009-6-7   5   \n\n-----------------------------------------------------------------------------------------\nID*    : ID, default sort in ID\nName   : Book Name\nAuthor : Author Name\nDoP    : Date of Publish\nDoR    : Date of Read\nRoS    : Review of Score\n*      : Key was used in sort\n_      : Item you are selecting\n-----------------------------------------------------------------------------------------\nCommand:\ni/I    : sorted in ID\ne/E    : sorted in Name\na/A    : sorted in Author\no/O    : sorted in DoP\nr/R    : sorted in DoR\ns/S    : sorted in RoS\nadd    : add an item\nedit   : edit an item\nview   : view an item\nfind   : find an item by Name\ndelete : delete an item\nm      : cancel and then return to main view\np      : previous page, 20 items in a page\nn      : next page, 20 items in a page\nu      : up item\nd      : down item\nexit   : exit program\n==========================================================================================      "
+        ref = '''\
+=========================================================================================
+*ID    name                                     author          DoP        DoR        RoS 
+_0     weirdo                                   Bob             2004-7-7   2005-6-7   0   
+ 1     zeirdo                                   Job             2007-7-7   2009-6-7   5   
+ 2     zeirdo                                   Job             2007-7-7   2009-6-7   5   
+
+-----------------------------------------------------------------------------------------
+ID*    : ID, default sort in ID
+Name   : Book Name
+Author : Author Name
+DoP    : Date of Publish
+DoR    : Date of Read
+RoS    : Review of Score
+*      : Key was used in sort
+_      : Item you are selecting
+-----------------------------------------------------------------------------------------
+Command:
+i/I    : sorted in ID
+e/E    : sorted in Name
+a/A    : sorted in Author
+o/O    : sorted in DoP
+r/R    : sorted in DoR
+s/S    : sorted in RoS
+add    : add an item
+edit   : edit an item
+view   : view an item
+find   : find an item by Name
+delete : delete an item
+m      : cancel and then return to main view
+p      : previous page, 20 items in a page
+n      : next page, 20 items in a page
+u      : up item
+d      : down item
+exit   : exit program
+==========================================================================================      \
+'''
         self.assertEqual(len(res), len(ref))
         self.assertEqual(res, ref)
 
@@ -230,7 +266,7 @@ class ViewTest(unittest.TestCase):
         book.DoR = "1/7/2016"
         book.RoS = 5
         self.controller.add_book(book)
-        name = "\nAwesomeness!!!"
+        name = "Awesomeness!!!"
         fv = FindView(self.controller)
         self.controller.setInputValue(name)
         fv.run()

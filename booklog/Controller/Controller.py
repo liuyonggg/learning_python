@@ -166,7 +166,7 @@ class BookController(Controller):
     def find_book(self):
         fv = FindView(self)
         fv.run()
-        self.mv.run()
+        self.mv.display()
 
     def find_callback(self, name):
         return self.bm.search_book_by_name(name)

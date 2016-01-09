@@ -107,25 +107,25 @@ exit   : exit program
         f = "%%(%s)-%d%s"
         for i in xrange(len(self.headers_title)):
             if i == self.sort_index:
-                self.headers = self.headers + "*" + f % (self.headers_title[i], self.headers_width[i], self.headers_type[i]) % {self.headers_title[i]:self.headers_title[i]}
+                self.headers = self.headers + "*" + f % (self.headers_title[i], self.headers_width[i]-1, self.headers_type[i]) % {self.headers_title[i]:self.headers_title[i]}
             else:
                 self.headers = self.headers + f % (self.headers_title[i], self.headers_width[i], self.headers_type[i]) % {self.headers_title[i]: self.headers_title[i]}
         i = 0
         books = ""
         for book in self.books:
             if self.book_index == i:
-                books = books + self.bookFormat % {"ID":"_%-7d"%book.ID, "name":book.name if len(book.name) < 42 else book.name[:41], "author":book.author if len(book.author) < 17 else book.name[:16], "DoP":book.DoP if len(book.DoP) < 12 else book.DoP[:11], "DoR":book.DoR if len(book.DoR) < 12 else book.DoR[:11], "RoS":book.RoS} + "\n"
+                books = books + self.bookFormat % {"ID":"_%s" % book.ID, "name":book.name if len(book.name) < 42 else book.name[:41], "author":book.author if len(book.author) < 17 else book.name[:16], "DoP":book.DoP if len(book.DoP) < 12 else book.DoP[:11], "DoR":book.DoR if len(book.DoR) < 12 else book.DoR[:11], "RoS":book.RoS} + "\n"
             else:
-                books = books + self.bookFormat % {"ID":" %-7d"%book.ID, "name":book.name if len(book.name) < 42 else book.name[:41], "author":book.author if len(book.author) < 17 else book.name[:16], "DoP":book.DoP if len(book.DoP) < 12 else book.DoP[:11], "DoR":book.DoR if len(book.DoR) < 12 else book.DoR[:11], "RoS":book.RoS} + "\n"
+                books = books + self.bookFormat % {"ID":" %s" % book.ID, "name":book.name if len(book.name) <= self.headers_width[1] else book.name[:self.headers_width[1]], "author":book.author if len(book.author) < 17 else book.name[:16], "DoP":book.DoP if len(book.DoP) < 12 else book.DoP[:11], "DoR":book.DoR if len(book.DoR) < 12 else book.DoR[:11], "RoS":book.RoS} + "\n"
             i += 1
         self.controller.write(self.format % {"headers":self.headers, "books":books})
 
     def handler(self):
         while True:
             self.controller.write("Please input your command ")
-            command = self.controller.getvalue()
+            command = self.controller.getvalue().lower()
             if command not in self.command_table:
-                print "Opps!!!, that is an invalid command."
+                self.controller.write("Opps!!!, that is an invalid command.")
             else:
                 self.command_table[command.lower()]()
                 if command == "exit":
@@ -296,34 +296,23 @@ Successfully found the following book
             self.book_format = self.book_format + "%-7s: %%(%s)s\n" % (headers[i], headers[i])
 
     def display(self):
-        name = self.controller.getvalue()
-        if name == "m":
-            self.controller.run()
-        book = self.controller.find_callback(name)
-        if book != None:
-            ID = book.ID
-            name = book.name
-            author = book.author
-            DoP = book.DoP
-            DoR = book.DoR
-            RoS = book.RoS
-
-            book = self.book_format % {"ID":ID, "Name":name, "Author":author, "DoP":DoP, "DoR":DoR, "RoS":RoS}
-            self.controller.write(self.format % {"book":book})
+        if self.book != None:
+            self.book = self.book_format % {"ID":self.ID, "Name":self.name, "Author":self.author, "DoP":self.DoP, "DoR":self.DoR, "RoS":self.RoS}
+            self.controller.write(self.format % {"book":self.book})
 
         else:
-            self.controller.write("There is no book with the name of %s"%name)
+            self.controller.write("There is no book with the name of %s"%self.name)
 
     def run(self):
-        name = self.controller.getvalue()
-        if name == "m":
+        self.name = self.controller.getvalue()
+        if self.name == "m":
             self.controller.run()
-        book = self.controller.find_callback(name)
-        if book != None:
-            ID = book.ID
-            name = book.name
-            author = book.author
-            DoP = book.DoP
-            DoR = book.DoR
-            RoS = book.RoS
+        self.book = self.controller.find_callback(self.name)
+        if self.book != None:
+            self.ID = self.book.ID
+            self.name = self.book.name
+            self.author = self.book.author
+            self.DoP = self.book.DoP
+            self.DoR = self.book.DoR
+            self.RoS = self.book.RoS
         self.display()
