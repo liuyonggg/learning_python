@@ -33,10 +33,22 @@ from Controller.Controller import *
 import StringIO
 import sys
 
-#out_file = StringIO.StringIO()
-#in_file = StringIO.StringIO()
-in_file = sys.stdin
-out_file = sys.stdout
-db_file = ""
-bc = BookController(in_file,out_file, db_file)
-bc.run()
+class InWrapper(object):
+    def __init__(self, io):
+        self.io = io
+
+    def getvalue(self):
+        return self.io.readline()
+
+if __name__ == "__main__":
+    #out_file = StringIO.StringIO()
+    #in_file = StringIO.StringIO()
+    in_file = InWrapper(sys.stdin)
+    out_file = sys.stdout
+    try:
+        db_file = open('datebase.txt', 'r+')
+    except IOError:
+        db_file = open('datebase.txt', 'w+')
+    bc = BookController(in_file,out_file, db_file)
+    bc.run()
+    db_file.close()

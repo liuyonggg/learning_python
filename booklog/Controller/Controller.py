@@ -45,7 +45,11 @@ class BookController(Controller):
         self.in_file = in_file
         self.out_file = out_file
         self.book = BookModel()
+        self.db_file = db_file
         self.command_table = {"add book":self.add_book, "edit book":self.edit_book, "view book":self.view_book, "exit":self.exit_program, "delete book":self.delete_book, "find book":self.find_book}
+        if self.db_file:
+            s = "".join(self.db_file.readlines())
+            self.bm.deserialize(s)
         self.number_books = 0
 
     def command_handler(self, return_value):
@@ -101,7 +105,7 @@ class BookController(Controller):
         self.out_file.write(msg)
         
     def getvalue(self):
-        return self.in_file.getvalue()
+        return self.in_file.getvalue().strip()
 
     def add_book(self):
         av = AddEditView(self, "add")
@@ -132,10 +136,14 @@ class BookController(Controller):
         return self.bm.__iter__() 
 
     def exit_program(self):
-        return self.bm.serialize()
+        if self.db_file and isinstance(self.db_file, file):
+            self.db_file.truncate(0)
+            self.db_file.seek(0)
+            s = self.bm.serialize()
+            self.db_file.write(s)
 
     def run(self):
-        self.mv.run()
+        return self.mv.run()
 
     def edit_book(self):
         ev = AddEditView(self, "edit")

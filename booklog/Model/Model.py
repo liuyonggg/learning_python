@@ -456,6 +456,7 @@ class BookManagerModel(Model):
             b = BookModel()
             b.deserialize(bookstr)
             self.books.append(b)
+        self.new_ID = len(self.books)
 
     def change_starting_index(self, index):
         """change the starting index
@@ -466,6 +467,9 @@ class BookManagerModel(Model):
         """activate the interator
         """
         return Iterator(self)      
+
+    def number_of_books(self):
+        return len(self.books)
 
 class Iterator:
     """a interator

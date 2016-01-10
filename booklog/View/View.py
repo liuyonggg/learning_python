@@ -204,7 +204,7 @@ exit   : exit program
     def run(self):
         self.load_books()
         self.display()
-        self.handler()
+        return self.handler()
 
 class AddEditView(View):
     def __init__(self, controller, type):
