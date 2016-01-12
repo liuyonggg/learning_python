@@ -1,0 +1,26 @@
+this document list the requirement and a simple prototype
+
+MTV(Model/Template/View)
+
+Model:
+    book
+        Name
+        dateOfPublish
+        author (M to M)
+    author
+        Name
+        Email
+    user
+        Name
+        Email
+    review
+        user
+        book
+        dateOfRead
+        reviewOfScore
+        comment
+    find book/find author
+    average review of score for each book
+    total review number for each book
+    sort book by name, author
+    sort book by average review of score/total review number for each book
