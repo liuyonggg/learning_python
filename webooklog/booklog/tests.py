@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from booklog.models import *
+from django.utils import timezone
 
 # Create your tests here.
 class BookViewTests(TestCase):
@@ -26,4 +28,24 @@ class BookViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "add")
 
+class BookModelTests(TestCase):
+    def setUp(self):
+        u1 = User.objects.create(first_name="fn1", last_name="ln1", email="fn1_ln1@example.com")
+        u1.save()
+        a1 = Author.objects.create(first_name="fn1", last_name="ln1", email="fn1_ln1@example.com")
+        a1.save()
+        b1 = Book.objects.create(name="b1", pub_date='2016-01-12 08:55')
+        b1.authors.add(a1)
+        b1.save()
 
+    def test_user(self):
+        user = User.objects.get(email="fn1_ln1@example.com")
+        self.assertEqual(str(user), 'fn1_ln1@example.com')
+
+    def test_author(self):
+        author = Author.objects.get(email='fn1_ln1@example.com')
+        self.assertEqual(str(author), 'fn1_ln1@example.com')
+
+    def test_book(self):
+        book = Book.objects.get(name='b1')
+        self.assertEqual(str(book), 'b1')
