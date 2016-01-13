@@ -48,7 +48,7 @@ if __name__ == "__main__":
     try:
         db_file = open('datebase.txt', 'r+')
     except IOError:
-        db_file = open('datebase.txt', 'w+')
+        db_file = open('datebase.txt', 'a+')
     bc = BookController(in_file,out_file, db_file)
     bc.run()
     db_file.close()
