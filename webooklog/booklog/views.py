@@ -18,4 +18,13 @@ from django.template import loader
 
 def index(request):
     #template = loader.get_template('booklog/index.html')
-    return HttpResponse("hello,world")
+    return HttpResponse("index")
+
+def detail(request, pk):
+    return HttpResponse("detail %s" % pk)
+
+def delete(request, pk):
+    return HttpResponse("delete %s" % pk)
+
+def add(request):
+    return HttpResponse("add")

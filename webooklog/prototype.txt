@@ -16,7 +16,7 @@ Model:
     review
         user
         book
-        dateOfRead
+        dateOfReviewed
         reviewOfScore
         comment
     find book/find author
