@@ -3,6 +3,11 @@ from django.core.urlresolvers import reverse
 from booklog.models import *
 from django.utils.timezone import utc
 import datetime
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.models import Permission, Group
+from django.contrib.auth import get_permission_codename
+from django.http import HttpRequest, HttpResponse
 
 # Create your tests here.
 class BookViewTests(TestCase):
@@ -21,8 +26,7 @@ class BookViewTests(TestCase):
     def test_delete_view(self):
         pk = 3
         response = self.client.get(reverse('booklog:delete', args=(pk,)))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "delete %d" % pk)
+        self.assertEqual(response.status_code, 302)
 
     def test_add_view(self):
         response = self.client.get(reverse('booklog:add'))
@@ -59,3 +63,133 @@ class BookModelTests(TestCase):
         u1 = User.objects.get(email='fn1_ln1@example.com')
         self.assertEqual(str(r1), '5')
         self.assertEqual(r1.user, u1)
+
+def get_perm(Model, perm):
+    """Return the permission object, for the Model"""
+    ct = ContentType.objects.get_for_model(Model)
+    return Permission.objects.get(content_type=ct, codename=perm)
+
+class UserTests(TestCase):
+    def setUp(self):
+        u1 = AuthUser.objects.create_user('john', 'john@example.com', 'johnpassword')
+        u1.save()
+
+
+        add_perm = get_perm(Book, get_permission_codename('add', Book._meta))
+        change_perm = get_perm(Book, get_permission_codename('change', Book._meta))
+        delete_perm = get_perm(Book, get_permission_codename('delete', Book._meta))
+
+        username = 'adduser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.user_permissions.add(add_perm)
+        u1.save()
+
+        username = 'changeuser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.user_permissions.add(change_perm)
+        u1.save()
+
+
+        username = 'deleteuser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.user_permissions.add(delete_perm)
+        u1.save()
+
+        add_group = Group.objects.create(name="add_group")
+        add_group.permissions.add(add_perm)
+        
+        change_group = Group.objects.create(name="change_group")
+        change_group.permissions.add(add_perm, change_perm)
+
+        delete_group = Group.objects.create(name="delete_group")
+        delete_group.permissions.add(add_perm, change_perm, delete_perm)
+
+        username = 'addgroupuser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.groups.add(add_group)
+        u1.save()
+
+        username = 'changegroupuser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.groups.add(change_group)
+        u1.save()
+
+        username = 'deletegroupuser'
+        u1 = AuthUser.objects.create_user(username, username + '@example.com', username + 'password')
+        u1.groups.add(delete_group)
+        u1.save()
+
+
+    def test_user(self):
+        u1 = authenticate(username='john', password='johnpassword')
+        self.assertIsNotNone(u1)
+        u1 = authenticate(username='john', password='wrongpassword')
+        self.assertIsNone(u1)
+        u1 = authenticate(username='wronguser', password='johnpassword')
+        self.assertIsNone(u1)
+
+    def test_perm(self):
+        u1 = authenticate(username='john', password='johnpassword')
+        self.assertIsNotNone(u1)
+        self.assertFalse(u1.has_perm('booklog.add_book'))
+        self.assertFalse(u1.has_perm('booklog.change_book'))
+        self.assertFalse(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='adduser', password='adduserpassword')
+        self.assertIsNotNone(u1)
+        self.assertTrue(u1.has_perm('booklog.add_book'))
+        self.assertFalse(u1.has_perm('booklog.change_book'))
+        self.assertFalse(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='changeuser', password='changeuserpassword')
+        self.assertIsNotNone(u1)
+        self.assertFalse(u1.has_perm('booklog.add_book'))
+        self.assertTrue(u1.has_perm('booklog.change_book'))
+        self.assertFalse(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='deleteuser', password='deleteuserpassword')
+        self.assertIsNotNone(u1)
+        self.assertFalse(u1.has_perm('booklog.add_book'))
+        self.assertFalse(u1.has_perm('booklog.change_book'))
+        self.assertTrue(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='addgroupuser', password='addgroupuserpassword')
+        self.assertIsNotNone(u1)
+        self.assertTrue(u1.has_perm('booklog.add_book'))
+        self.assertFalse(u1.has_perm('booklog.change_book'))
+        self.assertFalse(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='changegroupuser', password='changegroupuserpassword')
+        self.assertIsNotNone(u1)
+        self.assertTrue(u1.has_perm('booklog.add_book'))
+        self.assertTrue(u1.has_perm('booklog.change_book'))
+        self.assertFalse(u1.has_perm('booklog.delete_book'))
+
+        u1 = authenticate(username='deletegroupuser', password='deletegroupuserpassword')
+        self.assertIsNotNone(u1)
+        self.assertTrue(u1.has_perm('booklog.add_book'))
+        self.assertTrue(u1.has_perm('booklog.change_book'))
+        self.assertTrue(u1.has_perm('booklog.delete_book'))
+
+    def test_session_perm(self):
+        res = self.client.login(username='changegroupuser', password='changegroupuserpassword')
+        self.assertTrue(res)
+        pk=3
+        response = self.client.get(reverse('booklog:delete', args=(pk,)))
+        self.assertEqual(response.status_code, 302)
+        self.client.logout()
+
+        res = self.client.login(username='deletegroupuser', password='deletegroupuserpassword')
+        self.assertTrue(res)
+        pk=3
+        response = self.client.get(reverse('booklog:delete', args=(pk,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "delete %d" % pk)
+        self.client.logout()
+
+
+        res = self.client.login(username='changegroupuser', password='wrongpassword')
+        self.assertFalse(res)
+
+        res = self.client.login(username='wronguser', password='changegroupuserpassword')
+        self.assertFalse(res)

@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 class IndexView(generic.ListView):
@@ -23,6 +24,8 @@ def index(request):
 def detail(request, pk):
     return HttpResponse("detail %s" % pk)
 
+@login_required        
+@permission_required('booklog.delete_book')
 def delete(request, pk):
     return HttpResponse("delete %s" % pk)
 
