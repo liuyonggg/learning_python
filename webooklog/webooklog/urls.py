@@ -15,8 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from webooklog import views
+from booklog import views as booklog_views
 
 urlpatterns = [
+    url(r'^$', booklog_views.index, name='index'),
     url(r'^booklog/', include('booklog.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^password_change/$', views.password_change, name='password_change'),
+    url(r'^password_change_done/$', views.password_change_done, name='password_change_done'),
+    url(r'^password_reset/$', views.password_reset, name='password_reset'),
+    url(r'^password_reset_done/(?P<url>.*)/$', views.password_reset_done, name='password_reset_done'),
+    url(r'^password_reset_confirm/(?P<pk>.*)/(?P<token>.*)/$', views.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^password_reset_complete/$', views.password_reset_complete, name='password_reset_complete'),
+    url(r'^profile/$', views.user_profile, name='user_profile'),
 ]

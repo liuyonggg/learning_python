@@ -33,6 +33,58 @@ class BookViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "add")
 
+    def test_login_view_succ(self):
+        user = 'john'
+        password = 'johnpassword'
+        u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        u1.save()
+        response = self.client.post('/login/', {'username': user, 'password': password, 'next':'/dummynextpage/'})
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/dummynextpage/', target_status_code=404)
+
+    def test_login_view_fail(self):
+        user = 'john'
+        password = 'johnpassword'
+        u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        u1.save()
+        response = self.client.post('/login/', {'username': user, 'password': password+"123", 'next':'/dummynextpage/'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Your username and/or password were incorrect')
+
+
+    def test_logout_view_succ(self):
+        response = self.client.post('/logout/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_password_change_succ(self):
+        user = 'john'
+        password = 'johnpassword'
+        u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        u1.save()
+        self.client.post('/login/', {'username':user, 'password':password})
+        response = self.client.post('/password_change/', {'oldpassword':password, 'newpassword':password + '1', 'newpassword2':password + '1'})
+        self.assertRedirects(response, '/password_change_done/')
+
+    def test_password_change_wrong_old_password(self):
+        user = 'john'
+        password = 'johnpassword'
+        u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        u1.save()
+        self.client.post('/login/', {'username':user, 'password':password})
+        response = self.client.post('/password_change/', {'oldpassword':password+'123', 'newpassword':password + '1', 'newpassword2':password + '1'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'old password is not correct')
+
+    def test_password_change_wrong_diff_new_password(self):
+        user = 'john'
+        password = 'johnpassword'
+        u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        u1.save()
+        self.client.post('/login/', {'username':user, 'password':password})
+        response = self.client.post('/password_change/', {'oldpassword':password, 'newpassword':password + '123', 'newpassword2':password + '1'})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'new password is not same as new password confirmation')
+
 class BookModelTests(TestCase):
     def setUp(self):
         u1 = User.objects.create(first_name="fn1", last_name="ln1", email="fn1_ln1@example.com")
