@@ -26,14 +26,33 @@ def login(request):
                 return HttpResponseRedirect(redirect_to)
         else:
             state = "Your username and/or password were incorrect"
-    return render(request, 'registration/login.html', {'state':state, 'username':username})
+    return render(request, 'registration/login.html', {'state':state, 'username':username, 'next':redirect_to})
 
+def signup(request):
+    state = 'Welcome Sign Up'
+    if request.POST:
+        username = request.POST.get('username')
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        if password == password2:
+            user = User.objects.create_user(username, email, password)
+            user.first_name = firstname
+            user.last_name = lastname
+            user.save()
+            return HttpResponseRedirect(reverse('login'))
+        else:
+            state = "Your password were not match"
+    return render(request, 'registration/signup.html', {'state':state})
 
 def logout(request):
     auth_logout(request)
 
     return render(request, 'registration/logged_out.html')
 
+@login_required(login_url='/login/')
 def password_change(request):
     status = ""
     if request.POST:

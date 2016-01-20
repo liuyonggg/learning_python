@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User as AuthUser
 
 # Create your models here.
 @python_2_unicode_compatible  # only if you need to support Python 
@@ -35,7 +36,7 @@ class Book(models.Model):
 
 @python_2_unicode_compatible  # only if you need to support Python 
 class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     date = models.DateTimeField('date reviewed')
     score = models.IntegerField('review score', default=0)
