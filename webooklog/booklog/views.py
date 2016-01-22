@@ -19,6 +19,17 @@ class IndexView(generic.ListView):
         #return ["book1", "book2"]
         return None
 
+#def index(request):
+#    bookname = ""
+#    booklist = ""
+#    if request.GET:
+#        bookname= request.GET.get('search')
+#        try:
+#            booklist = Book.objects.filter(name=bookname)
+#        except:
+#            booklist = ""
+#    return render(request, 'booklog/index.html', {'booklist': booklist, 'bookname':bookname, 'user':request.user})
+site_title = "Book Log"
 def index(request):
     bookname = ""
     booklist = ""
@@ -28,7 +39,9 @@ def index(request):
             booklist = Book.objects.filter(name=bookname)
         except:
             booklist = ""
-    return render(request, 'booklog/index.html', {'booklist': booklist, 'bookname':bookname, 'user':request.user})
+    return render(request, 'booklog/index.html', {'booklist': booklist, 'bookname':bookname, 'user':request.user, 'site_title':site_title, 'title':''})
+
+
 
 def detail(request, pk):
     reviews = None

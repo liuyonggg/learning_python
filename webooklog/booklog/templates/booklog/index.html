@@ -1,32 +1,41 @@
-{# <embed srcp"{{ STATIC_URL }}booklog/static/booklog/footage.mp4"/> #}
-{#<image src="{{ STATIC_URL }}booklog/static/booklog/spinner.gif"/> #}
-{% load staticfiles %}
-<div align="right"> 
-    Welcome, 
-    {% if user.is_active %}
-        <a href="/profile"> {{ user.username }} </a>&nbsp 
-        <a href="/logout"> Log Out </a>&nbsp 
-    {% else %}
-        <a href="/login"> Log In </a>&nbsp 
-        <a href="/signup"> Sign Up </a> 
-    {% endif %}
-</div>
-<embed src="{% static "booklog/footage.mp4" %}" alt="my video" width="1800" height="600"/>
+{% extends "site/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block content %}
+<div id="content-main">
 <br>
 <br>
-<form align="middle" action="/" method="get"> {% csrf_token %}
-        <input type="text" name="search" value="" style="height:30px;font-size:14pt;"/>
-        <input type="submit" value="search" style="height:30px">
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<form align="middle" action={% url "index" %} method="get" > {% csrf_token %}
+        <input class='vTextField' type="text" name="search" value="">
+        <input type="submit" value="search">
 </form>
+
 <br>
 <br>
-<br>
-<div align="middle"> 
-{% if booklist %}
-    {% for book in booklist %}
-        <a href={% url 'booklog:detail' book.pk %}> {{book.name}} </a><br>
-    {% endfor %}
-{% elif bookname %}
-    <a href={% url 'booklog:add' bookname %} > click to add book {{bookname}} </a><br>
+<div class='results' align="middle">
+{% if bookname %}
+<table align="middle" id='result_list'>
+        {% if booklist %}
+            {% for book in booklist %}
+                <tr>
+                    <a href={% url 'booklog:detail' book.pk %}> {{book.name}} </a>
+                <tr>
+            {% endfor %}
+        {% elif bookname %}
+            <tr>
+                <a href={% url 'booklog:add' bookname %} > click to add book {{bookname}} </a>
+            <tr>
+        {% endif %}
+</table>
+</div>          
 {% endif %}
-</div>
+</div>          
+{% endblock %}

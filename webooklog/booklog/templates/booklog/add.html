@@ -1,0 +1,20 @@
+{% extends "site/base_site.html" %}
+{% load i18n static %}
+{% block content %}
+<div id="content-main">
+<p>Add Book</p>
+<form action={% url "booklog:add" name %}  method="post"> {% csrf_token %}
+        book name
+        <input type="text" name="name" value={{name}} ><br />
+        date published
+        <input type="text" name="pub_date" value="" ><br />
+        author 1
+        <input type="text" name="author1" value="" ><br />
+        author 2
+        <input type="text" name="author2" value="" ><br />
+        author 3
+        <input type="text" name="author3" value="" ><br />
+        <input type="submit" value="add book" >
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "site/base_site.html" %}
+{% load i18n static %}
+{% block content %}
+<div id="content-main">
+<p>Change Book</p>
+<form action={% url "booklog:change" book.pk %}  method="post"> {% csrf_token %}
+        book name
+        <input type="text" name="name" value={{book.name}}><br>
+        {# date published #}
+        {# <input type="text" name="pub_date" value={{book.pub_date.strftime("%b %d %y")}} ><br> #}
+        review score
+        <input type="number" name="review_score" value="0" > <br>
+        comment
+        <textarea name="comment" value=""></textarea><br>
+        <input type="submit" value="change" >
+</form>
+</div>
+{% endblock %}

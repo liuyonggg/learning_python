@@ -1,0 +1,21 @@
+{% extends "site/base_site.html" %}
+{% load i18n static %}
+{% block content %}
+<div id="content-main">
+        {% if book %}
+            book name: {{book.name}} <br>
+            date published : {{book.pub_date}} <br>
+            {% for c in reviews %}
+                <br>
+                reviewer: {{c.user.username}} <br>
+                review_score: {{c.score}} <br>
+                review_date: {{c.date}} <br>
+                comment: {{c.comment}}
+                <br><br>
+            {% endfor %}
+        {% else %}
+            can't find the book <br>
+        {% endif %}
+    <p><a href="{% url 'booklog:change' book.pk %}">< 'change' ></a></p>
+</div>
+{% endblock %}

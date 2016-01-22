@@ -245,3 +245,80 @@ class UserTests(TestCase):
 
         res = self.client.login(username='wronguser', password='changegroupuserpassword')
         self.assertFalse(res)
+
+
+'''
+<Item> 
+  <ASIN>B004HO6I4M</ASIN> 
+  <SmallImage> 
+    <URL> 
+      http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL75_.jpg 
+    </URL> 
+    <Height Units="pixels">75</Height> 
+    <Width Units="pixels">56</Width> 
+  </SmallImage> 
+  <MediumImage> 
+    <URL> 
+      http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL160_.jpg 
+    </URL> 
+    <Height Units="pixels">160</Height> 
+    <Width Units="pixels">120</Width> 
+  </MediumImage> 
+  <LargeImage> 
+    <URL> 
+      http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL500_.jpg 
+    </URL> 
+    <Height Units="pixels">500</Height> 
+    <Width Units="pixels">375</Width> 
+  </LargeImage> 
+  <ImageSets> 
+    <ImageSet Category="primary"> 
+      <SwatchImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL30_.jpg 
+        </URL> 
+        <Height Units="pixels">30</Height> 
+        <Width Units="pixels">22</Width> 
+      </SwatchImage> 
+      <SmallImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL75_.jpg 
+        </URL> 
+        <Height Units="pixels">75</Height> 
+        <Width Units="pixels">56</Width> 
+      </SmallImage> 
+      <ThumbnailImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL75_.jpg 
+        </URL> 
+        <Height Units="pixels">75</Height> 
+        <Width Units="pixels">56</Width> 
+      </ThumbnailImage> 
+      <TinyImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL110_.jpg 
+        </URL> 
+        <Height Units="pixels">110</Height> 
+        <Width Units="pixels">82</Width> 
+      </TinyImage> 
+      <MediumImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL160_.jpg 
+        </URL> 
+        <Height Units="pixels">160</Height> 
+        <Width Units="pixels">120</Width> 
+      </MediumImage> 
+      <LargeImage> 
+        <URL>  
+          http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL500_.jpg 
+        </URL> 
+        <Height Units="pixels">500</Height> 
+        <Width Units="pixels">375</Width> 
+      </LargeImage> 
+    </ImageSet> 
+  </ImageSets>
+</Item>
+http://docs.aws.amazon.com/AWSECommerceService/latest/DG/ItemSearch.html
+http://docs.aws.amazon.com/AWSECommerceService/latest/DG/prod-adv-api-dg.pdf
+http://docs.aws.amazon.com/AWSECommerceService/latest/DG/EX_RetrievingImages.html
+'''
