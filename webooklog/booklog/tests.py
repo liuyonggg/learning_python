@@ -14,24 +14,22 @@ class BookViewTests(TestCase):
     def test_index_view_with_books(self):
         response = self.client.get(reverse('booklog:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "index")
+        self.assertContains(response, "search")
 
     def test_detail_view(self):
-        pk = 3
+        pk = 1
+        user = 'john'
+        password = 'johnpassword'
+        self.u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        self.u1.save()
+        a1 = Author.objects.create(first_name="fn2", last_name="ln2", email="fn2_ln2@example.com")
+        a1.save()
+        b1 = Book.objects.create(name="b1", pub_date=datetime.datetime(2016, 01, 12, 8, 55, tzinfo=utc))
+        b1.authors.add(a1)
+        b1.save()
         response = self.client.get(reverse('booklog:detail', args=(pk,)))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "detail %d" % pk)
-
-
-    def test_delete_view(self):
-        pk = 3
-        response = self.client.get(reverse('booklog:delete', args=(pk,)))
-        self.assertEqual(response.status_code, 302)
-
-    def test_add_view(self):
-        response = self.client.get(reverse('booklog:add'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "add")
+        self.assertContains(response, 'book name: b1')
+        self.assertContains(response, 'date published : Jan. 12, 2016, 8:55 a.m.')
 
     def test_login_view_succ(self):
         user = 'john'
@@ -87,19 +85,20 @@ class BookViewTests(TestCase):
 
 class BookModelTests(TestCase):
     def setUp(self):
-        u1 = User.objects.create(first_name="fn1", last_name="ln1", email="fn1_ln1@example.com")
-        u1.save()
+        user = 'john'
+        password = 'johnpassword'
+        self.u1 = AuthUser.objects.create_user(user, 'john@example.com', password)
+        self.u1.save()
         a1 = Author.objects.create(first_name="fn2", last_name="ln2", email="fn2_ln2@example.com")
         a1.save()
         b1 = Book.objects.create(name="b1", pub_date=datetime.datetime(2016, 01, 12, 8, 55, tzinfo=utc))
         b1.authors.add(a1)
         b1.save()
-        r1 = Review.objects.create(user=u1, book=b1, date=datetime.datetime(2016, 01, 12, 8, 55, tzinfo=utc), score=5, comment="good book")
+        r1 = Review.objects.create(user=self.u1, book=b1, date=datetime.datetime(2016, 01, 12, 8, 55, tzinfo=utc), score=5, comment="good book")
         r1.save()
 
     def test_user(self):
-        user = User.objects.get(email="fn1_ln1@example.com")
-        self.assertEqual(str(user), 'fn1_ln1@example.com')
+        self.assertTrue(self.u1.email.endswith('john@example.com'))
 
     def test_author(self):
         author = Author.objects.get(email='fn2_ln2@example.com')
@@ -112,9 +111,8 @@ class BookModelTests(TestCase):
     def test_review(self):
         b1 = Book.objects.get(name='b1')
         r1 = Review.objects.get(book=b1)
-        u1 = User.objects.get(email='fn1_ln1@example.com')
         self.assertEqual(str(r1), '5')
-        self.assertEqual(r1.user, u1)
+        self.assertEqual(r1.user, self.u1)
 
 def get_perm(Model, perm):
     """Return the permission object, for the Model"""
@@ -226,19 +224,8 @@ class UserTests(TestCase):
     def test_session_perm(self):
         res = self.client.login(username='changegroupuser', password='changegroupuserpassword')
         self.assertTrue(res)
-        pk=3
-        response = self.client.get(reverse('booklog:delete', args=(pk,)))
-        self.assertEqual(response.status_code, 302)
+        ret = self.client.get('/profile/')
         self.client.logout()
-
-        res = self.client.login(username='deletegroupuser', password='deletegroupuserpassword')
-        self.assertTrue(res)
-        pk=3
-        response = self.client.get(reverse('booklog:delete', args=(pk,)))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "delete %d" % pk)
-        self.client.logout()
-
 
         res = self.client.login(username='changegroupuser', password='wrongpassword')
         self.assertFalse(res)
