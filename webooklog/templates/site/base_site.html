@@ -1,9 +1,0 @@
-{% extends "site/base.html" %}
-
-{% block title %} {% if title %} {{ title }} | {% else %} {{ site_title }} {% endif %} {% endblock %}
-
-{% block branding %}
-<h1 id="site-name"><a href="{% url 'index' %}">{{ site_header }}</a></h1>
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
