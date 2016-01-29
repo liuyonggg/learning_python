@@ -187,7 +187,7 @@ p.mini {
     margin-top: -3px;
 }
 
-.help, p.help, form p.help {
+.help, .helptext, p.help, form p.help,  p.helptext, form p.helptext, span.helptext, form span.helptext {
     font-size: 11px;
     color: #999;
 }

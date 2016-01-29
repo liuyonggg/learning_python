@@ -4,10 +4,13 @@ from django.contrib.admin.sites import AdminSite
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.urls import NoReverseMatch, reverse
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.views.decorators.cache import never_cache
-from django.contrib.auth import REDIRECT_FIELD_NAME, login
+from django.contrib.auth import REDIRECT_FIELD_NAME, login, password_validation 
 from django.template.response import TemplateResponse
+from django import forms
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404, render
 
 # Create your views here.
 class SiteView(AdminSite):
@@ -126,5 +129,67 @@ class SiteView(AdminSite):
                                        template_name='site/password_reset_complete.html', 
                                        extra_context=extra_context
                                       )
+
+
+    def signup(self, request, extra_context=None):
+        user_form = UserSignUpForm(request.POST or None)
+        if user_form.is_valid():
+            user_form.save()
+            return render(request, 'site/sign_up_done.html')
+        return render(request, 'site/sign_up.html', {'form': user_form})
+
+    def account(self, request, pk, extra_context=None):
+        user = get_object_or_404(User, pk=pk)
+        form = UserForm(request.POST or None, instance=user)
+        if request.POST and form.is_valid():
+            form.save()
+            index_path = reverse('index', current_app=self.name)
+            return HttpResponseRedirect(index_path)
+        return render(request, 'site/account.html', {'form':form, 'user':user})
+
+class UserForm(forms.ModelForm):
+    """
+    A form for user profile
+    """
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
+
+class UserSignUpForm(forms.ModelForm):
+    """
+    A form for user sign up
+    """
+    password1 = forms.CharField(label=_("Password"),
+        widget=forms.PasswordInput,
+        help_text=_("Enter the password, the password must contain at least 8 characters including 1 letter, 1 alphanumeric character"))
+    password2 = forms.CharField(label=_("Password confirmation"),
+        widget=forms.PasswordInput,
+        help_text=_("Enter the same password as before, for verification."))
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+    def __init__(self, *args, **kwargs):
+        super(UserSignUpForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'autofocus': ''})
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError(
+                "The two password input didn't match",
+                code='password_mismatch',
+            )
+        self.instance.username = self.cleaned_data.get('username')
+        password_validation.validate_password(self.cleaned_data.get('password2'), self.instance)
+        return password2
+
+    def save(self, commit=True):
+        user = super(UserSignUpForm, self).save(commit=False)
+        user.set_password(self.cleaned_data["password1"])
+        if commit:
+            user.save()
+        return user
 
 site = SiteView()

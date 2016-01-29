@@ -1,0 +1,12 @@
+{% extends "site/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'index' %}">{% trans 'Home' %}</a></div>{% endblock %}
+
+{% block content %}
+
+<p>{% trans "Congratulations! You have successfully signed up, please login" %}</p>
+
+<p><a href="{% url 'login' %}">{% trans 'Log in now' %}</a></p>
+
+{% endblock %}

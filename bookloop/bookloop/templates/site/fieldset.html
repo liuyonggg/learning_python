@@ -1,0 +1,53 @@
+<fieldset class="module aligned">
+    {% for line in fieldset %}
+        <div class="form-row">
+            {% for field in line %}
+                <div{% if not line.fields|length_is:'1' %} class="field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %} class="checkbox-row"{% endif %}>
+                    {% if not line.fields|length_is:'1' and not field.is_readonly %}{{ field.errors }}{% endif %}
+                    {% if field.is_checkbox %}
+                        {{ field.field }}{{ field.label_tag }}
+                    {% else %}
+                        {{ field.label_tag }}
+                        {% if field.is_readonly %}
+                            <p>{{ field.contents }}</p>
+                        {% else %}
+                            {{ field.field }}
+                        {% endif %}
+                    {% endif %}
+                    {% if field.field.help_text %}
+                        <p class="help">{{ field.field.help_text|safe }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</fieldset>
+
+<div>
+    <label class="required" for="id_username">Username:</label>
+    <input autofocus="" class="vTextField" id="id_username" maxlength="254" name="username" type="text" value="adfadf">
+    <p class="help">Required. 254 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+</div>
+
+<p>
+    <label for="id_username">Username:</label> <input autofocus="" id="id_username" maxlength="254" name="username" type="text" /> 
+    <span class="helptext">Required. 254 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+</p>
+
+
+<fieldset class="module aligned ">
+        <div class="form-row field-username">
+                <div>
+                        <label class="required" for="id_username">Username:</label>
+                            <input class="vTextField" id="id_username" maxlength="254" name="username" type="text" value="user1">
+                        <p class="help">Required. 254 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                </div>
+        </div>
+        <div class="form-row field-password">
+                <div>
+                        <label for="id_password">Password:</label>
+                            <div id="id_password"><strong>algorithm</strong>: pbkdf2_sha256 <strong>iterations</strong>: 30000 <strong>salt</strong>: R7rcuz****** <strong>hash</strong>: h2Ohr1************************************** </div>
+                        <p class="help">Raw passwords are not stored, so there is no way to see this user's password, but you can change the password using <a href="../password/">this form</a>.</p>
+                </div>
+        </div>
+</fieldset>
