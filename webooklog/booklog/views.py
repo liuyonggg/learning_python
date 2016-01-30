@@ -52,7 +52,7 @@ def detail(request, pk):
         book = None
     if book:
         reviews = Review.objects.filter(book=book)
-    return render(request, 'booklog/detail.html', {'book':book, 'reviews':reviews})
+    return render(request, 'booklog/detail.html', {'book':book, 'reviews':reviews, 'book_cover_url':'http://ecx.images-amazon.com/images/I/519SgX2wwDL._SL500_.jpg'})
 
 @permission_required('booklog.add_book')
 @login_required

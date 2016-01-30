@@ -4,6 +4,7 @@
 <div id="content-main">
         {% if book %}
             book name: {{book.name}} <br>
+            <img src={{book_cover_url}} alt="book cover">
             date published : {{book.pub_date}} <br>
             {% for c in reviews %}
                 <br>
