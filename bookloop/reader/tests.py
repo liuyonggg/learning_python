@@ -201,6 +201,13 @@ class ModelDummyTests(TestCase):
             q1 = None
         self.assertFalse(q1)
 
+    def test_edit_questions(self):
+        qt = 'what time is it 5?'
+        q1 = Question.objects.create(text=qt)
+        q1.save
+        qe = Question(pk=1, text=qt+'+1')
+        Question.objects.get(text='what time is it 5?+1')
+
     def test_ordering_questions(self):
         i = 0
         for a in Answer.objects.all():
