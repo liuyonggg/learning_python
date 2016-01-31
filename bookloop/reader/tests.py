@@ -117,31 +117,14 @@ class ModelTests(TestCase):
         rs3 = RecommendShip(recommendation=r1, to_users=u3, from_user=u1)
         rs3.save()
     
-        books = sorted(Book.objects.all(), key=number_recommend_for_a_book, reverse=True)
+        books = sorted(Book.objects.all(), key=number_of_recommendation_for_a_book, reverse=True)
         self.assertEqual(books, [b1, b2])
 
-        books = sorted(Book.objects.all(), key=number_from_user_for_a_book, reverse=True)
+        books = sorted(Book.objects.all(), key=number_of_from_user_for_a_book, reverse=True)
         self.assertEqual(books, [b1, b2])
 
-        books = sorted(Book.objects.all(), key=number_to_user_for_a_book, reverse=True)
+        books = sorted(Book.objects.all(), key=number_of_to_user_for_a_book, reverse=True)
         self.assertEqual(books, [b1, b2])
-
-def number_recommend_for_a_book(book):
-    return len(Recommendation.objects.filter(book=book))
-
-def number_from_user_for_a_book(book):
-    users = set()
-    for x in Recommendation.objects.filter(book=book):
-        for y in RecommendShip.objects.filter(recommendation=x):
-            users.add(y.from_user)
-    return len(users)
-
-def number_to_user_for_a_book(book):
-    users = set()
-    for x in Recommendation.objects.filter(book=book):
-        for u in x.recipients.all():
-            users.add(u)
-    return len(users)
 
 
 class Question(models.Model):
