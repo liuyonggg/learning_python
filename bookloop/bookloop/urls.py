@@ -17,9 +17,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import View
 from bookloop import sites
+from reader.views import IndexView
 
 urlpatterns = [
-    url(r'^$', sites.site.index, name='index'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^account/(?P<pk>[0-9]+)/$', sites.site.account, name='account'),
+    url(r'^signup/$', sites.site.signup, name='signup'),
     url(r'^login/$', sites.site.login, name='login'),
     url(r'^logout/$', sites.site.logout, name='logout'),
     url(r'^password_change/$', sites.site.password_change, name='password_change'),
