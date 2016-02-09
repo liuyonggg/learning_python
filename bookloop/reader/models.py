@@ -2,11 +2,54 @@ from __future__ import unicode_literals
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User as AuthUser
 from django.utils import timezone
 import datetime
 
 # Create your models here.
+
+@python_2_unicode_compatible  # only if you need to support Python
+class User(AuthUser):
+    friends = models.ManyToManyField('self', 
+        related_name='user_friends',
+        through='FriendShip',
+        through_fields=('from_user', 'to_user'),
+        symmetrical=False,
+        )
+
+    def __str__(self):
+        return self.username
+    
+    def __repr__(self):
+        return self.__str__()
+
+    def number_recommended_books_from_a_friend(self, friend):
+        return len(RecommendShip.objects.filter(to_user=self, from_user=friend))
+        
+
+FRIEND_STATUS = (
+    (1, "Created"),
+    (2, "Sent"),
+    (3, "Failed"),
+    (4, "Expired"),
+    (5, "Accepted"),
+    (6, "Declined"),
+    (7, "Deleted")
+)
+
+class FriendShip(models.Model):
+    from_user = models.ForeignKey(User, related_name="friendship_from_user")
+    to_user = models.ForeignKey(User, related_name="friendship_to_user")
+    date = models.DateField('start date', default=timezone.now().date())
+    status = models.IntegerField(choices=FRIEND_STATUS)
+
+    def __str__(self):
+        return "%s <-> %s" % (self.from_user.username, self.to_user.username)
+
+    def __repr__(self):
+        return self.__str__()
+
+
 @python_2_unicode_compatible  # only if you need to support Python
 class Book(models.Model):
     name = models.CharField('book name', max_length=100)
@@ -17,31 +60,40 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return self.__str__()
+
 @python_2_unicode_compatible  # only if you need to support Python
 class Recommendation(models.Model):
     book = models.OneToOneField('book')
-    date = models.DateField('recommend date', default=timezone.now)
+    date = models.DateField('recommend date', default=timezone.now().date())
     comment = models.TextField('comment', max_length=5000)
     recipients= models.ManyToManyField(
         User,
         through='RecommendShip',
-        through_fields=('recommendation', 'to_users'),
+        through_fields=('recommendation', 'to_user'),
     )
 
     def __str__(self):
         return self.comment[:25]
 
+    def __repr__(self):
+        return self.__str__()
+
 @python_2_unicode_compatible  # only if you need to support Python
 class RecommendShip(models.Model):
     recommendation = models.ForeignKey(Recommendation)
-    to_users = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendship_to_users')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendship_to_user')
     from_user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='recommendship_from_user',
     )
     def __str__(self):
-        return self.to_users
+        return '%s -> %s' %(self.from_user.username, self.to_user.username)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 def number_of_recommendation_for_a_book(book):

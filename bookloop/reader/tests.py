@@ -2,7 +2,8 @@ from django.test import TestCase
 from reader.models import *
 from reader.models import Book
 from django.db import models
-from django.contrib.auth.models import User
+from django.utils import timezone
+#from django.contrib.auth.models import User
 import datetime
 
 # Create your tests here.
@@ -15,6 +16,90 @@ class ModelTests(TestCase):
         self.assertEqual(b1.isbn, 'RENNOC-IS-HERE')
         self.assertEqual(b1.authors, 'Bob')
         self.assertEqual(str(b1.pub_date), '2016-01-01')
+
+    def test_user(self):
+        u1 = User.objects.create_user('john', 'john@example.com', 'johnpassword')
+        u1.save()
+        self.assertEqual(u1.username, 'john')
+        self.assertEqual(u1.email, 'john@example.com')
+        u2 = User.objects.create_user('tom', 'tom@example.com', 'tompassword')
+        u2.save()
+        u3 = User.objects.create_user('peter', 'peter@example.com', 'peterpassword')
+        u3.save()
+        fs1 = FriendShip.objects.create(from_user=u1, to_user=u2, date=datetime.date(2016, 1, 31), status=FRIEND_STATUS[0][0])
+        fs1.save()
+        fs2 = FriendShip.objects.create(from_user=u1, to_user=u3, date=datetime.date(2016, 1, 29), status=FRIEND_STATUS[0][0])
+        fs2.save()
+        u1.save()
+
+        friends = set()
+        for f in FriendShip.objects.filter(from_user=u1):
+            friends.add(f.to_user)
+        self.assertEqual(friends, set([u2, u3]))
+
+        fs2.delete()
+        friends = set()
+        for f in FriendShip.objects.filter(from_user=u1):
+            friends.add(f.to_user)
+        self.assertEqual(friends, set([u2]))
+
+    def test_user_sort_friend(self):
+        u1 = User.objects.create_user('john', 'john@example.com', 'johnpassword')
+        u1.save()
+        self.assertEqual(u1.username, 'john')
+        self.assertEqual(u1.email, 'john@example.com')
+        u2 = User.objects.create_user('tom', 'tom@example.com', 'tompassword')
+        u2.save()
+        u3 = User.objects.create_user('peter', 'peter@example.com', 'peterpassword')
+        u3.save()
+        u4 = User.objects.create_user('sean', 'sean@example.com', 'seanpassword')
+        u4.save()
+        fs1 = FriendShip.objects.create(from_user=u2, to_user=u1, date=datetime.date(2016, 1, 31), status=FRIEND_STATUS[0][0])
+        fs1.save()
+        fs2 = FriendShip.objects.create(from_user=u3, to_user=u1, date=datetime.date(2016, 1, 29), status=FRIEND_STATUS[0][0])
+        fs2.save()
+        fs3 = FriendShip.objects.create(from_user=u4, to_user=u1, date=datetime.date(2016, 2, 1), status=FRIEND_STATUS[0][0])
+        fs3.save()
+
+        b1 = Book.objects.create(name='b1', isbn='RENNOC-IS-HERE', authors='Bob', pub_date=datetime.date(2016, 1, 1))
+        b1.save()
+        b2 = Book.objects.create(name='b2', isbn='RENNOC-IS-HERE', authors='Bob', pub_date=datetime.date(2016, 2, 1))
+        b2.save()
+        comment = 'abcdefghijklmnopqrstuvwxyznowinomyABCnexttimewillusinwithme'
+        today = timezone.now().date()
+        recommendation = Recommendation.objects.create(book=b1, comment=comment, date=today)
+        recommendation2 = Recommendation.objects.create(book=b2, comment=comment, date=today)
+        recommendship = RecommendShip.objects.create(recommendation=recommendation, to_user=u1, from_user=u2)
+        recommendship.save()
+        recommendship = RecommendShip.objects.create(recommendation=recommendation, to_user=u1, from_user=u4)
+        recommendship.save()
+        recommendship = RecommendShip.objects.create(recommendation=recommendation2, to_user=u1, from_user=u4)
+        recommendship.save()
+
+
+        friends = sorted(FriendShip.objects.filter(to_user=u1), key=lambda x: x.to_user.number_recommended_books_from_a_friend(x.from_user), reverse=True)
+        res = []
+        for f in friends:
+            res.append(f.from_user)
+        self.assertEqual(res, [u4, u2, u3])
+
+
+        recommendship = RecommendShip.objects.get(recommendation=recommendation2, to_user=u1, from_user=u4)
+        recommendship.delete()
+
+        friends = sorted(FriendShip.objects.filter(to_user=u1), key=lambda x: x.to_user.number_recommended_books_from_a_friend(x.from_user), reverse=True)
+        res = []
+        for f in friends:
+            res.append(f.from_user)
+        self.assertEqual(res, [u2, u4, u3])
+
+
+        #friends = set()
+        #for f in FriendShip.objects.filter(from_user=u1):
+        #    friends.add(f.to_user)
+        #self.assertEqual(friends, set([u2]))
+
+
 
     def test_recommendation(self):
         b1 = Book.objects.create(name='b1', isbn='RENNOC-IS-HERE', authors='Bob', pub_date=datetime.date(2016, 1, 1))
@@ -32,7 +117,7 @@ class ModelTests(TestCase):
         today = datetime.date.today()
         user = User.objects.create_user('john', 'john@example.com', 'johnpassword')
         recommendation = Recommendation.objects.create(book=b1, comment=comment, date=today)
-        recommendship = RecommendShip.objects.create(recommendation=recommendation, to_users=user, from_user=user)
+        recommendship = RecommendShip.objects.create(recommendation=recommendation, to_user=user, from_user=user)
 
         user.save()
         recommendation.save()
@@ -40,10 +125,10 @@ class ModelTests(TestCase):
 
         self.assertEqual(recommendship.recommendation.comment, comment)
         self.assertEqual(recommendship.recommendation.date, today)
-        self.assertEqual(recommendship.to_users, user)
+        self.assertEqual(recommendship.to_user, user)
         self.assertEqual(recommendship.from_user, user)
 
-    def test_to_users_books(self):
+    def test_to_user_books(self):
         b1 = Book.objects.create(name='b1', isbn='RENNOC-IS-HERE', authors='Bob', pub_date=datetime.date(2016, 1, 1))
         b1.save()
         b2 = Book.objects.create(name='b2', isbn='RENNOC-IS-HERE', authors='Bob', pub_date=datetime.date(2016, 1, 1))
@@ -57,12 +142,12 @@ class ModelTests(TestCase):
         u1.save()
         u2 = User.objects.create_user('u2', 'u2@example.com', 'u2password')
         u2.save()
-        rs1 = RecommendShip(recommendation=r1, to_users=u2, from_user=u1)
+        rs1 = RecommendShip(recommendation=r1, to_user=u2, from_user=u1)
         rs1.save()
-        rs2 = RecommendShip(recommendation=r2, to_users=u2, from_user=u1)
+        rs2 = RecommendShip(recommendation=r2, to_user=u2, from_user=u1)
         rs2.save()
 
-        for rs in RecommendShip.objects.filter(to_users=u2):
+        for rs in RecommendShip.objects.filter(to_user=u2):
             self.assertEqual(rs, rs1) if rs == rs1 else self.assertEqual(rs, rs2)
             self.assertEqual(rs.recommendation.book, r1.book) if rs == rs1 else self.assertEqual(rs.recommendation.book, r2.book)
         
@@ -82,11 +167,11 @@ class ModelTests(TestCase):
         u2.save()
         u3 = User.objects.create_user('u3', 'u3@example.com', 'u3password')
         u3.save()
-        rs1 = RecommendShip(recommendation=r1, to_users=u2, from_user=u1)
+        rs1 = RecommendShip(recommendation=r1, to_user=u2, from_user=u1)
         rs1.save()
-        rs2 = RecommendShip(recommendation=r2, to_users=u2, from_user=u1)
+        rs2 = RecommendShip(recommendation=r2, to_user=u2, from_user=u1)
         rs2.save()
-        rs3 = RecommendShip(recommendation=r1, to_users=u3, from_user=u1)
+        rs3 = RecommendShip(recommendation=r1, to_user=u3, from_user=u1)
         rs3.save()
 
         books = set()
@@ -110,11 +195,11 @@ class ModelTests(TestCase):
         u2.save()
         u3 = User.objects.create_user('u3', 'u3@example.com', 'u3password')
         u3.save()
-        rs1 = RecommendShip(recommendation=r1, to_users=u2, from_user=u1)
+        rs1 = RecommendShip(recommendation=r1, to_user=u2, from_user=u1)
         rs1.save()
-        rs2 = RecommendShip(recommendation=r2, to_users=u2, from_user=u1)
+        rs2 = RecommendShip(recommendation=r2, to_user=u2, from_user=u1)
         rs2.save()
-        rs3 = RecommendShip(recommendation=r1, to_users=u3, from_user=u1)
+        rs3 = RecommendShip(recommendation=r1, to_user=u3, from_user=u1)
         rs3.save()
     
         books = sorted(Book.objects.all(), key=number_of_recommendation_for_a_book, reverse=True)
@@ -125,3 +210,4 @@ class ModelTests(TestCase):
 
         books = sorted(Book.objects.all(), key=number_of_to_user_for_a_book, reverse=True)
         self.assertEqual(books, [b1, b2])
+
