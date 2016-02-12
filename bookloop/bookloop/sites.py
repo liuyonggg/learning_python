@@ -11,6 +11,8 @@ from django.template.response import TemplateResponse
 from django import forms
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render
+from reader.models import FriendShip, FRIEND_STATUS
+from django.utils import timezone
 
 # Create your views here.
 class SiteView(AdminSite):
@@ -145,7 +147,57 @@ class SiteView(AdminSite):
             form.save()
             index_path = reverse('index', current_app=self.name)
             return HttpResponseRedirect(index_path)
-        return render(request, 'site/account.html', {'form':form, 'user':user})
+        return render(request, 'site/account.html', {'form':form, 'user':user, 'is_self':user==request.user})
+
+
+    def add_friend(self, request, pk, extra_context=None):
+        assert (request.user.pk != pk)
+        print pk
+        user = get_object_or_404(User, pk=pk)
+        #from_user = Reader.objects.get(auth_user=request.user)
+        #to_user = Reader.objects.get(auth_user=user)
+        msg = None
+        if user == request.user:
+            msg = "can't add the friend"
+        else:
+            try:
+                fs = FriendShip.objects.get(from_user=request.user, to_user=user)
+                if fs.status != FRIEND_STATUS[4][0] and fs.status != FRIEND_STATUS[5][0]:
+                    fs.status = FRIEND_STATUS[1][0]
+                    fs.save()
+                    msg = "sent friend application"
+            except:
+                try:
+                    fs = FriendShip.objects.get(from_user=request.user, to_user=user)
+                    if fs.status != FRIEND_STATUS[6][0]:
+                        fs.status = FRIEND_STATUS[4][0]
+                        fs.save()
+                        msg = "successfully added friend"
+                except:
+                    fs = FriendShip.objects.create(from_user=request.user, to_user=user, date=timezone.now(), status=FRIEND_STATUS[1][0])
+                    fs.save()
+                    msg = "sent friend application"
+        return render(request, 'site/message.html', {'msg':msg})
+
+    def delete_friend(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        friends = FriendShip.objects.filter(Q(from_user=request.user, to_user=user) | Q(from_user=user, to_user=request.user))
+        assert (len(friends) == 1)
+        for f in friends:
+            assert (f.status == FRIEND_STATUS[4][0])
+            f.status = FRIEND_STATUS[6][0]
+            f.save()
+        return HttpResponseRedirect(reverse('index'))
+
+    def confirm_friend(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        friends = FriendShip.objects.filter(Q(from_user=request.user, to_user=user) | Q(from_user=user, to_user=request.user))
+        assert (len(friends) == 1)
+        for f in friends:
+            assert (f.status == FRIEND_STATUS[1][0])
+            f.status = FRIEND_STATUS[4][0]
+            f.save()
+        return HttpResponseRedirect(reverse('index'))
 
 class UserForm(forms.ModelForm):
     """

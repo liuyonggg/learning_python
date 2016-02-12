@@ -2,14 +2,17 @@ from __future__ import unicode_literals
 
 from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
-from django.contrib.auth.models import User as AuthUser
+from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
 
 # Create your models here.
 
+
+'''
 @python_2_unicode_compatible  # only if you need to support Python
-class User(AuthUser):
+class User(models.Model):
+    auth_user = models.ForeignKey(AuthUser, related_name="user_auth_user")
     friends = models.ManyToManyField('self', 
         related_name='user_friends',
         through='FriendShip',
@@ -25,6 +28,7 @@ class User(AuthUser):
 
     def number_recommended_books_from_a_friend(self, friend):
         return len(RecommendShip.objects.filter(to_user=self, from_user=friend))
+'''
         
 
 FRIEND_STATUS = (
@@ -96,6 +100,18 @@ class RecommendShip(models.Model):
         return self.__str__()
 
 
+@python_2_unicode_compatible  # only if you need to support Python
+class ReadBook(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reader')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='read_book')
+    date = models.DateField('finish date', default=timezone.now().date())
+
+    def __str__(self):
+        return '%s read  %s on %s' %(self.user, self.book, self.date)
+
+    def __repr__(self):
+        return self.__str__()
+    
 def number_of_recommendation_for_a_book(book):
     return len(Recommendation.objects.filter(book=book))
 

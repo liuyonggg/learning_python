@@ -32,7 +32,11 @@
     {{form.as_p}}
     <p>
     <label for="id_email">Email:</label><label id="id_email" >{{user.email}} </label> 
-    <input type="submit" value="Save" class="default" name="save">
+    {% if is_self %}
+        <input type="submit" value="Save" class="default" name="save">
+    {% else %}
+        <a href="{% url 'add_friend' user.pk %}">{% trans 'Add Friend' %}</a>
+    {% endif %}
 
 {% endif %}
 {% endblock %}

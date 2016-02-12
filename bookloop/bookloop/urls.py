@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^password_reset/complete/$', sites.site.password_reset_complete, name='password_reset_complete'),
     url(r'^password_reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         sites.site.password_reset_confirm, name='password_reset_confirm'),
+    url(r'^addfriend/(?P<pk>[0-9]+)/$', sites.site.add_friend, name='add_friend'),
+    url(r'^delete_friend/(?P<pk>[0-9]+)/$', sites.site.delete_friend, name='delete_friend'),
+    url(r'^confirm_friend/(?P<pk>[0-9]+)/$', sites.site.confirm_friend, name='confirm_friend'),
     url(r'^reader/', include('reader.urls')),
     url(r'^admin/', admin.site.urls),
 ]
