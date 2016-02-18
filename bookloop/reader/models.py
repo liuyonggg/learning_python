@@ -6,31 +6,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
 
-# Create your models here.
-
-
-'''
-@python_2_unicode_compatible  # only if you need to support Python
-class User(models.Model):
-    auth_user = models.ForeignKey(AuthUser, related_name="user_auth_user")
-    friends = models.ManyToManyField('self', 
-        related_name='user_friends',
-        through='FriendShip',
-        through_fields=('from_user', 'to_user'),
-        symmetrical=False,
-        )
-
-    def __str__(self):
-        return self.username
-    
-    def __repr__(self):
-        return self.__str__()
-
-    def number_recommended_books_from_a_friend(self, friend):
-        return len(RecommendShip.objects.filter(to_user=self, from_user=friend))
-'''
-        
-
 FRIEND_STATUS = (
     (1, "Created"),
     (2, "Sent"),
@@ -54,7 +29,7 @@ class FriendShip(models.Model):
         return self.__str__()
 
 
-@python_2_unicode_compatible  # only if you need to support Python
+@python_2_unicode_compatible
 class Book(models.Model):
     name = models.CharField('book name', max_length=100)
     isbn = models.CharField('isbn', max_length=100)
@@ -67,7 +42,7 @@ class Book(models.Model):
     def __repr__(self):
         return self.__str__()
 
-@python_2_unicode_compatible  # only if you need to support Python
+@python_2_unicode_compatible
 class Recommendation(models.Model):
     book = models.OneToOneField('book')
     date = models.DateField('recommend date', default=timezone.now().date())
@@ -84,7 +59,7 @@ class Recommendation(models.Model):
     def __repr__(self):
         return self.__str__()
 
-@python_2_unicode_compatible  # only if you need to support Python
+@python_2_unicode_compatible
 class RecommendShip(models.Model):
     recommendation = models.ForeignKey(Recommendation)
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recommendship_to_user')
@@ -100,7 +75,6 @@ class RecommendShip(models.Model):
         return self.__str__()
 
 
-@python_2_unicode_compatible  # only if you need to support Python
 class ReadBook(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reader')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='read_book')
@@ -129,4 +103,68 @@ def number_of_to_user_for_a_book(book):
             users.add(u)
     return len(users)
 
+
+
+
+
+
+
+
+
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!         
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+#You are entering TRASH ZONE!!!
+
+
+'''
+@python_2_unicode_compatible
+class User(models.Model):
+    auth_user = models.ForeignKey(AuthUser, related_name="user_auth_user")
+    friends = models.ManyToManyField('self', 
+        related_name='user_friends',
+        through='FriendShip',
+        through_fields=('from_user', 'to_user'),
+        symmetrical=False,
+        )
+
+    def __str__(self):
+        return self.username
+    
+    def __repr__(self):
+        return self.__str__()
+
+    def number_recommended_books_from_a_friend(self, friend):
+        return len(RecommendShip.objects.filter(to_user=self, from_user=friend))
+'''
+        
 
