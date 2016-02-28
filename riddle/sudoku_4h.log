@@ -1,0 +1,64 @@
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:43: DeprecationWarning: This module has been deprecated in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+  "This module will be removed in 0.20.", DeprecationWarning)
+[2016-02-27 12:32:58.611476] start work on generating data 24000
+[2016-02-27 12:32:58.930560] finished generate positive data 0
+[2016-02-27 12:35:04.677425] finished generate positive data 500
+[2016-02-27 12:37:10.429159] finished generate positive data 1000
+[2016-02-27 12:39:16.439362] finished generate positive data 1500
+[2016-02-27 12:41:22.802857] finished generate positive data 2000
+[2016-02-27 12:43:29.210390] finished generate positive data 2500
+[2016-02-27 12:45:36.025516] finished generate positive data 3000
+[2016-02-27 12:47:44.932508] finished generate positive data 3500
+[2016-02-27 12:49:54.028866] finished generate positive data 4000
+[2016-02-27 12:52:04.108418] finished generate positive data 4500
+[2016-02-27 12:54:15.271973] finished generate positive data 5000
+[2016-02-27 12:56:27.539280] finished generate positive data 5500
+[2016-02-27 12:58:38.032809] finished generate positive data 6000
+[2016-02-27 13:00:49.015946] finished generate positive data 6500
+[2016-02-27 13:03:00.256230] finished generate positive data 7000
+[2016-02-27 13:05:12.209868] finished generate positive data 7500
+[2016-02-27 13:07:26.897791] finished generate positive data 8000
+[2016-02-27 13:09:40.550876] finished generate positive data 8500
+[2016-02-27 13:11:54.485862] finished generate positive data 9000
+[2016-02-27 13:14:08.792936] finished generate positive data 9500
+[2016-02-27 13:16:24.393777] finished generate positive data 10000
+[2016-02-27 13:18:39.736195] finished generate positive data 10500
+[2016-02-27 13:20:55.352740] finished generate positive data 11000
+[2016-02-27 13:23:11.394046] finished generate positive data 11500
+[2016-02-27 13:25:26.941770] finished generate positive data 12000
+[2016-02-27 13:27:48.353340] finished generate positive data 12500
+[2016-02-27 13:30:13.874011] finished generate positive data 13000
+[2016-02-27 13:32:32.900945] finished generate positive data 13500
+[2016-02-27 13:34:52.892883] finished generate positive data 14000
+[2016-02-27 13:37:16.432836] finished generate positive data 14500
+[2016-02-27 13:39:45.952112] finished generate positive data 15000
+[2016-02-27 13:42:15.188912] finished generate positive data 15500
+[2016-02-27 13:45:16.906144] finished generate positive data 16000
+[2016-02-27 13:48:19.087938] finished generate positive data 16500
+[2016-02-27 13:51:21.734443] finished generate positive data 17000
+[2016-02-27 13:54:23.195182] finished generate positive data 17500
+[2016-02-27 13:57:23.695540] finished generate positive data 18000
+[2016-02-27 14:00:21.612016] finished generate positive data 18500
+[2016-02-27 14:03:21.070066] finished generate positive data 19000
+[2016-02-27 14:06:20.961851] finished generate positive data 19500
+[2016-02-27 14:09:22.090273] finished generate positive data 20000
+[2016-02-27 14:12:22.970215] finished generate positive data 20500
+[2016-02-27 14:15:22.970759] finished generate positive data 21000
+[2016-02-27 14:18:21.198802] finished generate positive data 21500
+[2016-02-27 14:21:20.417652] finished generate positive data 22000
+[2016-02-27 14:24:21.178237] finished generate positive data 22500
+[2016-02-27 14:27:23.665460] finished generate positive data 23000
+[2016-02-27 14:30:27.748844] finished generate positive data 23500
+[2016-02-27 14:33:45.093635] finished generate negative data 0
+[2016-02-27 14:33:48.803203] finished generate negative data 10000
+[2016-02-27 14:33:52.422540] finished generate negative data 20000
+start to learn
+[0.71836891942628189, 0.70888662960342708, 0.70104180075780931, 0.70102527488656208, 0.69612434550102631, 0.69587346791036386, 0.69600632017951103, 0.69525720183590212, 0.69499555217326092, 0.69503830155757029, 0.69434097739055811, 0.69401210158701665, 0.69404825048197505, 0.69384680131712817, 0.69371858396450659, 0.6938503759868031, 0.69400797797025959, 0.69354280082753772, 0.69351007603139181, 0.69348069135454948, 0.69346944358321994]
+correct = 24000, wrong = 24000
+
+Traceback (most recent call last):
+  File "classisifer_example.py", line 450, in <module>
+    test_classifier_sigmoid_sudoku()
+  File "classisifer_example.py", line 433, in test_classifier_sigmoid_sudoku
+    assert (clf.predict([b])[0] == 0)
+AssertionError
