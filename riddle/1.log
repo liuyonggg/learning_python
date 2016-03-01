@@ -1,0 +1,15 @@
+/usr/local/lib/python2.7/dist-packages/sklearn/cross_validation.py:43: DeprecationWarning: This module has been deprecated in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+  "This module will be removed in 0.20.", DeprecationWarning)
+[2016-02-27 11:38:07.609970] start work on generating data 100
+[2016-02-27 11:38:08.449294] finished generate positive data 0
+[2016-02-27 11:38:54.207779] finished generate negative data 0
+start to learn
+[0.69388731330006659, 1.1157577146895621, 0.70615747539658147, 0.85499817574768855]
+correct = 100, wrong = 100
+
+Traceback (most recent call last):
+  File "classisifer_example.py", line 450, in <module>
+    test_classifier_sigmoid_sudoku()
+  File "classisifer_example.py", line 433, in test_classifier_sigmoid_sudoku
+    assert (clf.predict([b])[0] == 0)
+AssertionError
