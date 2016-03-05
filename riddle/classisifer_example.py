@@ -189,7 +189,7 @@ def test_classifier_sigmoid_onehot():
         y.append(t[(i*10181)%len(t)][1])
     clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(9), random_state=1, activation='logistic', max_iter=5000)
     clf.fit(X, y)  
-    print (clf.loss_curve_)
+    print_log (clf.loss_curve_)
     correct = 0
     wrong   = 0
     for (xt, yt) in t:
@@ -244,11 +244,11 @@ def test_classifier_sigmoid_sudoku_field():
     for i in range(50000):
         X.append(t[(i*10181+20347)%len(t)][0])
         y.append(t[(i*10181+20347)%len(t)][1])
-    #print (X, y)
-    print ("start to learn")
+    #print_log (X, y)
+    print_log ("start to learn")
     clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(9), random_state=1, activation='logistic', max_iter=5000)
     clf.fit(X, y)  
-    print (clf.loss_curve_)
+    print_log (clf.loss_curve_)
     correct = 0
     wrong   = 0
     for (xt, yt) in t:
@@ -256,10 +256,9 @@ def test_classifier_sigmoid_sudoku_field():
             correct += 1
         else:
             wrong += 1
-    print ("correct = %d, wrong = %d\n" %(correct, wrong))
+    print_log ("correct = %d, wrong = %d\n" %(correct, wrong))
 
-
-def test_classifier_sigmoid_sudoku_line():
+def test_classifier_sigmoid_sudoku_line_old():
     t = []
     for i in range(1000):
         b = None
@@ -301,11 +300,11 @@ def test_classifier_sigmoid_sudoku_line():
     for i in range(50000):
         X.append(t[(i*10181+20347)%len(t)][0])
         y.append(t[(i*10181+20347)%len(t)][1])
-    #print (X, y)
-    print ("start to learn")
+    #print_log (X, y)
+    print_log ("start to learn")
     clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(2*81), random_state=1, activation='logistic', max_iter=5000)
     clf.fit(X, y)  
-    print (clf.loss_curve_)
+    print_log (clf.loss_curve_)
     correct = 0
     wrong   = 0
     for (xt, yt) in t:
@@ -313,7 +312,7 @@ def test_classifier_sigmoid_sudoku_line():
             correct += 1
         else:
             wrong += 1
-    print ("correct = %d, wrong = %d\n" %(correct, wrong))
+    print_log ("correct = %d, wrong = %d\n" %(correct, wrong))
     '''
     b = []
     for i in [4,9,3,5,7,2,8,1,6,6,1,5,8,3,9,4,2,7,2,8,7,1,4,6,3,9,5,9,5,1,2,6,8,7,4,3,3,2,8,7,5,4,1,6,9,7,6,4,9,1,3,5,8,2,1,7,6,4,2,5,9,3,8,5,3,9,6,8,1,2,7,4,8,4,2,3,9,7,6,5,1]:
@@ -341,9 +340,99 @@ def test_classifier_sigmoid_sudoku_line():
         b += number_to_bit(i)
     assert (clf.predict([b])[0] == 0)
     '''
+
+
+def test_classifier_sigmoid_sudoku_line():
+    t = []
+    bt = generate_sudoku_from_file('sudoku.1m.p')
+    for b in bt:
+        for r in range(9):
+            x = []
+            for c in range(9):
+                x += number_to_bit(int(b[r,c]))
+            assert (len(x) == 81)
+            t.append([x, 1])
+    print_log("finished generate positive data %d" % len(t))
+    l = len(t)
+    for i in xrange(l):
+        b = (i * 11483 + 20347)%l
+        x1 = (i * 10181 + 20353)%9
+        x2 = (i * 10657 + 20357)%9
+        n = copy.deepcopy(t[b])
+        assert (len(n) == 2)
+        assert (len(n[0]) == 81)
+        assert (n[1] == 1)
+        if i % 13 == 0:
+            if n[0][x1*9+x2] == 0:
+                n[0][x1*9+x2] = 1
+            else:
+                n[0][x1*9+((x2+1)%9)] = 1
+        else:
+            x1 = (i * 10181 + 20353)%9
+            x2 = (i * 10657 + 20357)%9
+            while (n[0][x2*9:x2*9+9] == n[0][x1*9:x1*9+9]):
+                x2 = (x2 * 10657 + 20357)%9
+            n[0][x2*9:x2*9+9] = n[0][x1*9:x1*9+9]
+        n[1] = 0
+        t.append(n)
+    print_log("finished generate negative data %d" % len(t))
+    X = []
+    y = []
+    for i in xrange(len(t)):
+        X.append(t[(i*10181+20347)%len(t)][0])
+        y.append(t[(i*10181+20347)%len(t)][1])
+    print_log("start to learn %d" % len(t))
+    t = []
+    clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(2*81), random_state=1, activation='logistic', max_iter=5000)
+    clf.fit(X, y)  
+    print_log (clf.loss_curve_)
+    t = []
+    bt = generate_sudoku_to_file('sudoku.1m.p', num_hours=0.5)
+    for b in bt:
+        for r in range(9):
+            x = []
+            for c in range(9):
+                x += number_to_bit(int(b[r,c]))
+            assert (len(x) == 81)
+            t.append([x, 1])
+
+    print_log("finished generate positive data %d" % len(t))
+    l = len(t)
+    for i in xrange(l):
+        b = (i * 11483 + 20347)%l
+        x1 = (i * 10181 + 20353)%81
+        x2 = (i * 10657 + 20357)%81
+        n = copy.deepcopy(t[b])
+        assert (len(n) == 2)
+        assert (len(n[0]) == 81)
+        assert (n[1] == 1)
+        if i % 13 == 0:
+            if n[0][x1] == 0:
+                n[0][x1] = 1
+            else:
+                n[0][(x1+1)%81] = 1
+        else:
+            x1 = (i * 10181 + 20353)%9
+            x2 = (i * 10657 + 20357)%9
+            while (n[0][x2*9:x2*9+9] == n[0][x1*9:x1*9+9]):
+                x2 = (x2 * 10657 + 20357)%9
+            n[0][x2*9:x2*9+9] = n[0][x1*9:x1*9+9]
+        n[1] = 0
+        t.append(n)
+    print_log("finished generate negative data %d" % len(t))
+    print_log("start to predict %d" % len(t))
+    correct = 0
+    wrong   = 0
+    for (xt, yt) in t:
+        if clf.predict([xt])[0] == yt:
+            correct += 1
+        else:
+            wrong += 1
+    print_log("correct = %d, wrong = %d" %(correct, wrong))
+
 import datetime
 def print_log(msg):
-    print ("[%s] %s" % (datetime.datetime.now(), msg))
+    print("[%s] %s" % (datetime.datetime.now(), msg))
 
 def test_classifier_sigmoid_sudoku():
     t = []
@@ -398,11 +487,11 @@ def test_classifier_sigmoid_sudoku():
     for i in xrange(l):
         X.append(t[(i*10181+20347)%len(t)][0])
         y.append(t[(i*10181+20347)%len(t)][1])
-    #print (X, y)
-    print ("start to learn")
+    #print_log (X, y)
+    print_log ("start to learn")
     clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(4*9*81), random_state=1, activation='logistic', max_iter=5000)
     clf.fit(X, y)  
-    print (clf.loss_curve_)
+    print_log (clf.loss_curve_)
     correct = 0
     wrong   = 0
     for (xt, yt) in t:
@@ -410,7 +499,7 @@ def test_classifier_sigmoid_sudoku():
             correct += 1
         else:
             wrong += 1
-    print ("correct = %d, wrong = %d\n" %(correct, wrong))
+    print_log ("correct = %d, wrong = %d\n" %(correct, wrong))
 
     b = []
     for i in [4,9,3,5,7,2,8,1,6,6,1,5,8,3,9,4,2,7,2,8,7,1,4,6,3,9,5,9,5,1,2,6,8,7,4,3,3,2,8,7,5,4,1,6,9,7,6,4,9,1,3,5,8,2,1,7,6,4,2,5,9,3,8,5,3,9,6,8,1,2,7,4,8,4,2,3,9,7,6,5,1]:
@@ -474,9 +563,8 @@ def load_from_disk(fname):
     o = pickle.loads(s)
     return o
 
-def generate_sudoku_to_file(fname):
+def generate_sudoku_to_file(fname, num_hours=12):
     jobs_per_hour = 12000
-    num_hours = 12
     total_jobs = int(jobs_per_hour*num_hours)
     print_log("start to work on total job number %d" % total_jobs)
     res = generate_sudoku_4_cores(total_jobs)
@@ -489,6 +577,7 @@ def generate_sudoku_to_file(fname):
         print_log("combined result has element number %d" % len(res))
     dump_to_disk(res, fname)
     print_log("saved work result in the file %s" % fname)
+    return res
 
 def generate_sudoku_from_file(fname):
     o = load_from_disk(fname)
@@ -540,7 +629,7 @@ def learn_sudoku(sample):
 
     clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(4*9*81), random_state=1, activation='logistic', max_iter=5000)
     clf.fit(X, y)  
-    print (clf.loss_curve_)
+    print_log (clf.loss_curve_)
     correct = 0
     wrong   = 0
     for (xt, yt) in t:
@@ -550,10 +639,99 @@ def learn_sudoku(sample):
             wrong += 1
     print_log("correct = %d, wrong = %d\n" %(correct, wrong))
 
+def learn_incremental(clf, X, y):
+    assert (len(X) == len(y))
+    print_log("incremental learn data %d" % len(y))
+    #clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(4*9*81), random_state=1, activation='logistic', max_iter=200*len(y), warm_start=True, tol=1e-6, verbose=True )
+    clf = MLPClassifier(alpha=1e-5, hidden_layer_sizes=(5000), random_state=1, activation='logistic', max_iter=200*len(y), warm_start=True, tol=1e-6, verbose=True, learning_rate_init=1e-5)
+    clf.fit(X, y)  
+    print_log("finish incremental learn data %d" % len(y))
+    print_log (clf.loss_curve_)
+    correct = 0
+    wrong   = 0
+    for (xt, yt) in zip(X,y):
+        if clf.predict([xt])[0] == yt:
+            correct += 1
+        else:
+            wrong += 1
+    print_log("correct = %d, wrong = %d, rate = %.3f\n" %(correct, wrong, correct/((correct+wrong)*1.0)))
+    return clf
+
+def append_sudoku_errors(t):
+    l = len(t)
+    for i in xrange(l):
+        b = (i * 11483 + 20347)%l
+        x1 = (i * 10181 + 20353)%81
+        x2 = (i * 10657 + 20357)%9
+        n = copy.deepcopy(t[b])
+        assert (len(n) == 2)
+        assert (len(n[0]) == 729)
+        assert (n[1] == 1)
+        if i % 13 == 0:
+            if n[0][x1*9+x2] == 0:
+                n[0][x1*9+x2] = 1
+            else:
+                n[0][x1*9+((x2+1)%9)] = 1
+            n[1] = 0
+            t.append(n)
+        else:
+            x2 = x1
+            while (n[0][x2*9:x2*9+9] == n[0][x1*9:x1*9+9]):
+                x2 = (x2 * 10657 + 20357)%81
+            n[0][x2*9:x2*9+9] = n[0][x1*9:x1*9+9]
+            n[1] = 0
+            t.append(n)
+    print_log("finished generate negative data %d" % len(t))
+    return t
+
+
+def learn_sudoku_big(sample):
+    size = 20000
+    review_depth = 2
+    if len(sample) < size:
+        return learn_sudoku(sample)
+    t = []
+    #for s in sample[0:size+100]:
+    for s in sample:
+        x = []
+        for r in range(9):
+            for c in range(9):
+                x += number_to_bit(int(s[r,c]))
+        t.append([x, 1])
+    print_log("finished generate positive data %d" % len(t))
+    t = append_sudoku_errors(t)
+
+    X = []
+    y = []
+    l = len(t)
+    for i in xrange(l):
+        X.append(t[(i*10181+20347)%len(t)][0])
+        y.append(t[(i*10181+20347)%len(t)][1])
+
+    clf = None
+    for i in xrange(0, len(t), size):
+        print_log("incremental learn from sample [%d:%d]" % (i, i+size))
+        clf = learn_incremental(clf, X[i:i+size], y[i:i+size])
+        for j in range(1, review_depth+1):
+            ri = i - size*j
+            if ri >= 0:
+                print_log("review from sample [%d:%d]" % (ri, ri+size))
+                clf = learn_incremental(clf, X[ri:ri+size], y[ri:ri+size])
+    correct = 0
+    wrong   = 0
+    for (xt, yt) in zip(X, y):
+        if clf.predict([xt])[0] == yt:
+            correct += 1
+        else:
+            wrong += 1
+    print_log("correct = %d, wrong = %d, rate = %.3f\n" %(correct, wrong, (correct/(correct+wrong)*1.0)))
+
+
 if __name__ == '__main__':
-    #generate_sudoku_to_file('sudoku.p')
+    #test_classifier_sigmoid_sudoku_line()
+    #generate_sudoku_to_file('sudoku.1m.p')
     s = generate_sudoku_from_file('sudoku.p')
-    learn_sudoku(s)
+    learn_sudoku_big(s)
     #test_classifier_sigmoid_sudoku_field()
     #test_classifier_sigmoid_sudoku_line()
     #test_classifier_sigmoid_sudoku()
@@ -570,5 +748,5 @@ if __name__ == '__main__':
     #test_classifier_5()
     #test_classifier_6()
     #test_sudoku_generator_1()
-    print ("all tests passed")
+    print_log ("all tests passed")
 
