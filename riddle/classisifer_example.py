@@ -686,7 +686,7 @@ def append_sudoku_errors(t):
 
 
 def learn_sudoku_big(sample):
-    size = 20000
+    size = 50000
     review_depth = 2
     if len(sample) < size:
         return learn_sudoku(sample)
